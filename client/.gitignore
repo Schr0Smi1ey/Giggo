@@ -18,6 +18,7 @@ build/
 coverage/
 .cache/
 .vite/
+*.tsbuildinfo
 
 # Local uploads and generated document QA artifacts
 uploads/
