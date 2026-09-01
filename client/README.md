@@ -33,20 +33,11 @@ AI-generated CV feedback is advisory only. Human review remains authoritative fo
 
 ## Current Repository Status
 
-**Status: homepage implementation started.**
+**Status: complete multi-page frontend imported and rebranded as Giggo.**
 
-The repository now contains a Vite, React, and TypeScript frontend with the first homepage slice implemented. Backend features, authentication, dashboards, proposal flows, messaging, verification review, and payments are not implemented yet.
+The repository now contains a Vite, React, and Tailwind CSS client with its original page and route structure preserved. The homepage, authentication screens, public marketplace pages, profile flows, dashboards, settings, verification screens, job management screens, CV analysis interface, and placeholder routes are present.
 
-The homepage currently includes:
-
-- Responsive navigation with handled "coming soon" actions for unavailable pages.
-- Hero search section for finding freelance talent.
-- Company/client onboarding cards.
-- Three-step onboarding explanation.
-- Sample freelance project cards.
-- Popular skill role chips.
-- Client call-to-action section.
-- FAQ and footer.
+The copied frontend expects API and Socket.IO services at `http://localhost:5000` through the Vite development proxy. Those backend services are not part of this repository, so authentication and data-backed actions require a compatible server before they can function.
 
 ## Local Development
 
@@ -65,7 +56,6 @@ npm run dev
 Run quality checks:
 
 ```powershell
-npm run lint
 npm run build
 ```
 
