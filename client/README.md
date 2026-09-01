@@ -33,9 +33,43 @@ AI-generated CV feedback is advisory only. Human review remains authoritative fo
 
 ## Current Repository Status
 
-**Status: documentation and requirements stage.**
+**Status: homepage implementation started.**
 
-This repository currently contains the project documentation, not a runnable application, dependency manifest, environment configuration, or verified setup command. The README therefore does not provide installation or usage instructions that cannot be validated from the repository.
+The repository now contains a Vite, React, and TypeScript frontend with the first homepage slice implemented. Backend features, authentication, dashboards, proposal flows, messaging, verification review, and payments are not implemented yet.
+
+The homepage currently includes:
+
+- Responsive navigation with handled "coming soon" actions for unavailable pages.
+- Hero search section for finding freelance talent.
+- Company/client onboarding cards.
+- Three-step onboarding explanation.
+- Sample freelance project cards.
+- Popular skill role chips.
+- Client call-to-action section.
+- FAQ and footer.
+
+## Local Development
+
+Install dependencies:
+
+```powershell
+npm install
+```
+
+Run the development server:
+
+```powershell
+npm run dev
+```
+
+Run quality checks:
+
+```powershell
+npm run lint
+npm run build
+```
+
+This project includes a repo-level `.npmrc` that runs npm scripts through `pwsh`. That avoids path issues on Windows when the workspace path contains `&`.
 
 ## Documentation
 
