@@ -20,6 +20,19 @@ coverage/
 .vite/
 *.tsbuildinfo
 
+# Local test and browser-QA output
+test-results/
+playwright-report/
+blob-report/
+.nyc_output/
+*.lcov
+
+# Local deployment and pipeline state
+.vercel/
+.netlify/
+.pipeline-local/
+storybook-static/
+
 # Local uploads and generated document QA artifacts
 uploads/
 

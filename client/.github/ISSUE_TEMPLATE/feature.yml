@@ -1,0 +1,73 @@
+name: Feature
+description: Plan a user-visible Giggo capability with testable acceptance criteria.
+title: "feat: "
+body:
+  - type: markdown
+    attributes:
+      value: Keep one issue small enough for one person to finish in one to three working days.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem and user value
+      description: Who has the problem, what happens today, and why the change matters.
+      placeholder: As a client, I need to... so that...
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Primary area
+      options:
+        - Frontend
+        - Backend/API
+        - Full-stack/integration
+        - Documentation/process
+        - CI/deployment
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Proposed outcome
+      description: Describe behavior and boundaries, not an unreviewed implementation mandate.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Use observable Given/When/Then statements or a concrete checklist.
+      placeholder: |
+        - [ ] Given ..., when ..., then ...
+        - [ ] Invalid input returns ...
+        - [ ] Unauthorized users cannot ...
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies and cross-repository links
+      description: Link blocking issues, API work, frontend work, or decisions. Write None when independent.
+      placeholder: Backend owner/repository#123; blocked by #45
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification plan
+      description: Name the unit, API, browser, accessibility, or manual checks required.
+    validations:
+      required: true
+  - type: checkboxes
+    id: ready
+    attributes:
+      label: Definition of Ready
+      options:
+        - label: The outcome and scope boundary are clear.
+          required: true
+        - label: Acceptance criteria are observable and testable.
+          required: true
+        - label: Dependencies and the owning repository are identified.
+          required: true
+        - label: The issue contains no secret or private user data.
+          required: true

@@ -1,0 +1,78 @@
+# Copy this file to .github/workflows/backend-ci.yml in cseku_26_wpl_Giggo_Backend
+# after the backend package.json, package-lock.json, and src/server.js are committed.
+name: Backend CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backend-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend-quality:
+    name: backend-quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NODE_ENV: test
+      AUTO_SEED: "false"
+      PORT: "5000"
+      CLIENT_URL: http://localhost:5173
+      JWT_SECRET: ci_only_access_secret_not_for_deployment
+      JWT_REFRESH_SECRET: ci_only_refresh_secret_not_for_deployment
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+
+      - name: Use Node.js 24 LTS
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Reject high or critical production dependency vulnerabilities
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Lint when a lint script is available
+        run: npm run lint --if-present
+
+      - name: Run backend tests
+        run: npm test
+
+      - name: Smoke-test API health endpoint
+        shell: bash
+        run: |
+          npm start > server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+
+          for attempt in {1..60}; do
+            if curl --fail --silent http://127.0.0.1:5000/api/health; then
+              exit 0
+            fi
+            sleep 2
+          done
+
+          echo "Backend did not become healthy within 120 seconds."
+          cat server.log
+          exit 1
+
+      - name: Upload server log after failure
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: giggo-backend-log-${{ github.sha }}
+          path: server.log
+          if-no-files-found: ignore
+          retention-days: 7

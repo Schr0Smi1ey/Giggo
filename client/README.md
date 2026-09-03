@@ -65,6 +65,14 @@ This project includes a repo-level `.npmrc` that runs npm scripts through `pwsh`
 
 - [Software Requirements Specification](docs/Giggo_SRS.docx)
 - [Project Scope, Objectives, and Team Roles](docs/Giggo_Scope_Objectives_Team_Roles.pdf)
+- [End-to-End Development Pipeline](docs/DEVELOPMENT_PIPELINE.md)
+- [GitHub Project and Kanban Setup](docs/KANBAN_SETUP.md)
+- [Evidence-Based Project Roadmap](docs/ROADMAP.md)
+- [Contribution Guide](CONTRIBUTING.md)
+
+The development process uses one shared GitHub Project for issues from both the frontend and
+backend repositories. Each change moves from an issue to a short-lived branch, pull request,
+automated checks, teammate review, integration verification, and then `main`.
 
 ## Team
 
@@ -79,4 +87,4 @@ This project includes a repo-level `.npmrc` that runs npm scripts through `pwsh`
 
 ## Repository
 
-<https://github.com/Schr0Smi1ey/cseku_26_wpl_Giggo>
+<https://github.com/Schr0Smi1ey/cseku_26_wpl_Giggo_Frontend>
