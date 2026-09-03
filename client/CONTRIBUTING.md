@@ -2,7 +2,7 @@
 
 Giggo uses two repositories and one shared delivery process:
 
-- Frontend: `Schr0Smi1ey/cseku_26_wpl_Giggo`
+- Frontend: `Schr0Smi1ey/cseku_26_wpl_Giggo_Frontend`
 - Backend: `Schr0Smi1ey/cseku_26_wpl_Giggo_Backend`
 - Project governance: [Development Pipeline](docs/DEVELOPMENT_PIPELINE.md)
 - Work tracking: [Kanban Setup](docs/KANBAN_SETUP.md)

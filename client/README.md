@@ -87,4 +87,4 @@ automated checks, teammate review, integration verification, and then `main`.
 
 ## Repository
 
-<https://github.com/Schr0Smi1ey/cseku_26_wpl_Giggo>
+<https://github.com/Schr0Smi1ey/cseku_26_wpl_Giggo_Frontend>

@@ -20,7 +20,7 @@ that have not been integrated.
 
 | Repository | Purpose | Primary lead | Required reviewer |
 | --- | --- | --- | --- |
-| `cseku_26_wpl_Giggo` | React/Vite frontend, UX, client validation, frontend tests, user documentation | Md. Sarafat Karim | Md. Farid Hossen Rehad |
+| `cseku_26_wpl_Giggo_Frontend` | React/Vite frontend, UX, client validation, frontend tests, user documentation | Md. Sarafat Karim | Md. Farid Hossen Rehad |
 | `cseku_26_wpl_Giggo_Backend` | Express API, MongoDB, authorization, domain logic, integrations, backend tests, API contract | Md. Farid Hossen Rehad | Md. Sarafat Karim |
 
 Primary ownership is a coordination aid, not a silo. Architecture, requirements, security review,
