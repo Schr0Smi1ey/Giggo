@@ -1,0 +1,71 @@
+name: Bug report
+description: Report reproducible behavior that differs from the expected result.
+title: "fix: "
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: State the broken behavior and its user impact.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Observed in
+      options:
+        - Frontend
+        - Backend/API
+        - Frontend-backend integration
+        - CI/deployment
+        - Documentation
+    validations:
+      required: true
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - S1 - security, data loss, or system unavailable
+        - S2 - critical journey blocked with no workaround
+        - S3 - degraded behavior with a workaround
+        - S4 - minor or cosmetic
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      placeholder: |
+        1. Start from...
+        2. Perform...
+        3. Observe...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result and evidence
+      description: Include safe logs, screenshots, response status, browser, and commit SHA. Remove tokens and personal data.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: Local/staging, browser, operating system, frontend SHA, backend SHA
+    validations:
+      required: true
+  - type: textarea
+    id: regression
+    attributes:
+      label: Regression verification
+      description: Describe the automated or manual check that will prove the fix and prevent recurrence.
+    validations:
+      required: true

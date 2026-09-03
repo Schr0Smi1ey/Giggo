@@ -1,0 +1,46 @@
+name: Engineering task
+description: Track bounded technical, documentation, test, or process work.
+title: "chore: "
+body:
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Required outcome
+      description: State the result that must exist when this task is complete.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Primary area
+      options:
+        - Frontend
+        - Backend/API
+        - Full-stack/integration
+        - Documentation/process
+        - CI/deployment
+    validations:
+      required: true
+  - type: textarea
+    id: checklist
+    attributes:
+      label: Work checklist
+      placeholder: |
+        - [ ] First bounded step
+        - [ ] Second bounded step
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: Completion evidence
+      description: Name the commands, links, screenshots, or review evidence required before closure.
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies and risks
+      description: Link blockers and cross-repository work. Write None when independent.
+    validations:
+      required: true
