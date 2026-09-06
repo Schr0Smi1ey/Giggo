@@ -23,6 +23,11 @@ const CvAnalysis = lazy(() => import('./pages/CvAnalysis.jsx'));
 const Verification = lazy(() => import('./pages/Verification.jsx'));
 const VerificationQueue = lazy(() => import('./pages/admin/VerificationQueue.jsx'));
 const VerifyEmail = lazy(() => import('./pages/VerifyEmail.jsx'));
+const FindJobs = lazy(() => import('./pages/FindJobs.jsx'));
+const JobDetail = lazy(() => import('./pages/JobDetail.jsx'));
+const PostJob = lazy(() => import('./pages/PostJob.jsx'));
+const MyJobs = lazy(() => import('./pages/MyJobs.jsx'));
+const SavedJobs = lazy(() => import('./pages/SavedJobs.jsx'));
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword.jsx'));
 const ResetPassword = lazy(() => import('./pages/ResetPassword.jsx'));
 const Placeholder = lazy(() => import('./pages/Placeholder.jsx'));
@@ -37,6 +42,8 @@ export default function App() {
             <Route index element={<Home />} />
             <Route path="/find-talent" element={<FindTalent />} />
             <Route path="/freelancers/:userId" element={<PublicProfile />} />
+            <Route path="/find-jobs" element={<FindJobs />} />
+            <Route path="/jobs/:id" element={<JobDetail />} />
             <Route path="/services" element={<Placeholder title="Services" />} />
             <Route path="/how-it-works" element={<Placeholder title="How It Works" />} />
             <Route path="/about" element={<Placeholder title="About" />} />
@@ -75,6 +82,10 @@ export default function App() {
             <Route path="profile" element={<Profile />} />
             <Route path="cv-analysis" element={<CvAnalysis />} />
             <Route path="verification" element={<Verification />} />
+            <Route path="jobs" element={<MyJobs />} />
+            <Route path="jobs/new" element={<PostJob />} />
+            <Route path="jobs/:id/edit" element={<PostJob />} />
+            <Route path="saved-jobs" element={<SavedJobs />} />
             <Route
               path="admin/verification"
               element={
