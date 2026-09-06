@@ -19,6 +19,7 @@ const Profile = lazy(() => import('./pages/Profile.jsx'));
 const Onboarding = lazy(() => import('./pages/Onboarding.jsx'));
 const FindTalent = lazy(() => import('./pages/FindTalent.jsx'));
 const PublicProfile = lazy(() => import('./pages/PublicProfile.jsx'));
+const CvAnalysis = lazy(() => import('./pages/CvAnalysis.jsx'));
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword.jsx'));
 const ResetPassword = lazy(() => import('./pages/ResetPassword.jsx'));
 const Placeholder = lazy(() => import('./pages/Placeholder.jsx'));
@@ -68,6 +69,7 @@ export default function App() {
           >
             <Route index element={<Dashboard />} />
             <Route path="profile" element={<Profile />} />
+            <Route path="cv-analysis" element={<CvAnalysis />} />
             <Route path="settings" element={<Settings />} />
           </Route>
 
