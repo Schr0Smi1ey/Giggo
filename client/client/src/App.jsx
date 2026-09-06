@@ -20,6 +20,9 @@ const Onboarding = lazy(() => import('./pages/Onboarding.jsx'));
 const FindTalent = lazy(() => import('./pages/FindTalent.jsx'));
 const PublicProfile = lazy(() => import('./pages/PublicProfile.jsx'));
 const CvAnalysis = lazy(() => import('./pages/CvAnalysis.jsx'));
+const Verification = lazy(() => import('./pages/Verification.jsx'));
+const VerificationQueue = lazy(() => import('./pages/admin/VerificationQueue.jsx'));
+const VerifyEmail = lazy(() => import('./pages/VerifyEmail.jsx'));
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword.jsx'));
 const ResetPassword = lazy(() => import('./pages/ResetPassword.jsx'));
 const Placeholder = lazy(() => import('./pages/Placeholder.jsx'));
@@ -49,6 +52,7 @@ export default function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
           <Route
             path="/onboarding"
             element={
@@ -70,6 +74,15 @@ export default function App() {
             <Route index element={<Dashboard />} />
             <Route path="profile" element={<Profile />} />
             <Route path="cv-analysis" element={<CvAnalysis />} />
+            <Route path="verification" element={<Verification />} />
+            <Route
+              path="admin/verification"
+              element={
+                <ProtectedRoute roles={['admin']}>
+                  <VerificationQueue />
+                </ProtectedRoute>
+              }
+            />
             <Route path="settings" element={<Settings />} />
           </Route>
 
