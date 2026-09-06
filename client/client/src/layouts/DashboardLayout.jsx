@@ -1,9 +1,10 @@
 import { Outlet, NavLink, Link } from 'react-router-dom';
-import { Briefcase, LayoutDashboard, Settings } from 'lucide-react';
+import { Briefcase, LayoutDashboard, User, Settings } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
 
 const items = [
   { to: '/dashboard', label: 'Overview', icon: LayoutDashboard },
+  { to: '/dashboard/profile', label: 'Profile', icon: User },
   { to: '/dashboard/settings', label: 'Settings', icon: Settings },
 ];
 

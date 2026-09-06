@@ -15,6 +15,10 @@ import NotFound from './pages/NotFound.jsx';
 // Lazy-loaded pages (code splitting).
 const Dashboard = lazy(() => import('./pages/Dashboard.jsx'));
 const Settings = lazy(() => import('./pages/Settings.jsx'));
+const Profile = lazy(() => import('./pages/Profile.jsx'));
+const Onboarding = lazy(() => import('./pages/Onboarding.jsx'));
+const FindTalent = lazy(() => import('./pages/FindTalent.jsx'));
+const PublicProfile = lazy(() => import('./pages/PublicProfile.jsx'));
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword.jsx'));
 const ResetPassword = lazy(() => import('./pages/ResetPassword.jsx'));
 const Placeholder = lazy(() => import('./pages/Placeholder.jsx'));
@@ -27,6 +31,8 @@ export default function App() {
           {/* Public site */}
           <Route element={<PublicLayout />}>
             <Route index element={<Home />} />
+            <Route path="/find-talent" element={<FindTalent />} />
+            <Route path="/freelancers/:userId" element={<PublicProfile />} />
             <Route path="/services" element={<Placeholder title="Services" />} />
             <Route path="/how-it-works" element={<Placeholder title="How It Works" />} />
             <Route path="/about" element={<Placeholder title="About" />} />
@@ -42,6 +48,14 @@ export default function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route
+            path="/onboarding"
+            element={
+              <ProtectedRoute>
+                <Onboarding />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Authenticated dashboard */}
           <Route
@@ -53,6 +67,7 @@ export default function App() {
             }
           >
             <Route index element={<Dashboard />} />
+            <Route path="profile" element={<Profile />} />
             <Route path="settings" element={<Settings />} />
           </Route>
 

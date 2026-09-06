@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import { useMyProfile } from '../services/profile.js';
 import { CheckCircle2, Circle } from 'lucide-react';
 
 const cards = {
@@ -26,7 +26,12 @@ const cards = {
 export default function Dashboard() {
   const { user, hasRole } = useAuth();
   const role = hasRole('admin') ? 'admin' : hasRole('client') ? 'client' : 'freelancer';
-  const metrics = cards[role];
+  const isFreelancer = role === 'freelancer';
+  const { data: profile } = useMyProfile({ enabled: isFreelancer });
+  const completeness = profile?.completeness ?? 0;
+  const metrics = cards[role].map(([label, value]) =>
+    isFreelancer && label === 'Profile completion' ? [label, `${completeness}%`] : [label, value]
+  );
 
   return (
     <div>
@@ -51,6 +56,12 @@ export default function Dashboard() {
           <li className="flex items-center gap-2 text-slate-500">
             <Circle className="h-4 w-4" /> {user?.emailVerified ? 'Email verified' : 'Verify your email'}
           </li>
+          {isFreelancer && (
+            <li className="flex items-center gap-2 text-slate-700">
+              {completeness >= 80 ? <CheckCircle2 className="h-4 w-4 text-brand-600" /> : <Circle className="h-4 w-4" />}
+              {completeness >= 80 ? 'Profile complete' : `Complete your profile (${completeness}%)`}
+            </li>
+          )}
         </ul>
       </div>
     </div>
