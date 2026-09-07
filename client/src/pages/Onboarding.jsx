@@ -13,6 +13,7 @@ import { Select } from '../components/Select.jsx';
 import { Button } from '../components/Button.jsx';
 import { TagInput } from '../components/TagInput.jsx';
 import { RepeatableList } from '../components/RepeatableList.jsx';
+import ClientOnboarding from './ClientOnboarding.jsx';
 
 const STEPS = ['Basics', 'Skills & rate', 'Details'];
 
@@ -37,15 +38,8 @@ export default function Onboarding() {
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
   const setNested = (g, k, v) => setForm((f) => ({ ...f, [g]: { ...f[g], [k]: v } }));
 
-  // Clients don't have a freelancer onboarding in this phase.
   if (user && user.role === 'client' && !(user.roles || []).includes('freelancer')) {
-    return (
-      <div className="mx-auto max-w-lg px-4 py-20 text-center">
-        <h1 className="text-2xl font-bold text-slate-900">You're all set</h1>
-        <p className="mt-2 text-slate-500">Client onboarding and job posting arrive in Phase 5.</p>
-        <Button className="mt-6" onClick={() => navigate('/dashboard')}>Go to dashboard</Button>
-      </div>
-    );
+    return <ClientOnboarding />;
   }
 
   const validateStep = () => {

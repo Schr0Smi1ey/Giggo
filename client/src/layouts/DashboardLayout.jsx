@@ -1,15 +1,10 @@
 import { Outlet, NavLink, Link } from 'react-router-dom';
-import { Briefcase, LayoutDashboard, User, MessageSquare, Settings, Sparkles, ShieldCheck, Bookmark } from 'lucide-react';
+import { Briefcase, LayoutDashboard, User, Settings, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
 
 const items = [
   { to: '/dashboard', label: 'Overview', icon: LayoutDashboard },
   { to: '/dashboard/profile', label: 'Profile', icon: User },
-  { to: '/dashboard/jobs', label: 'My Jobs', icon: Briefcase },
-  { to: '/dashboard/saved-jobs', label: 'Saved Jobs', icon: Bookmark },
-  { to: '/dashboard/cv-analysis', label: 'CV Analyzer', icon: Sparkles },
-  { to: '/dashboard/verification', label: 'Verification', icon: ShieldCheck },
-  { to: '/dashboard/messages', label: 'Messages', icon: MessageSquare },
   { to: '/dashboard/settings', label: 'Settings', icon: Settings },
 ];
 
