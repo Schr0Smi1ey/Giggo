@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { ShieldCheck, Mail, Phone, IdCard, Upload, X, Clock, CheckCircle2, XCircle, AlertTriangle } from 'lucide-react';
 import {
@@ -39,6 +40,7 @@ function Card({ title, icon: Icon, children, done }) {
 }
 
 export default function Verification() {
+  const navigate = useNavigate();
   const { data: status, isLoading } = useVerificationStatus();
   const { data: requests } = useMyRequests();
   const resendEmail = useResendEmail();
@@ -55,7 +57,11 @@ export default function Verification() {
   const [files, setFiles] = useState([]);
 
   const onResendEmail = async () => {
-    try { await resendEmail.mutateAsync(); toast.success('Verification email sent — check your inbox (or server logs in dev).'); }
+    try {
+      const out = await resendEmail.mutateAsync();
+      if (out.devVerifyToken) return navigate(`/verify-email?token=${encodeURIComponent(out.devVerifyToken)}`);
+      toast.success('Verification email sent — check your inbox.');
+    }
     catch (err) { toast.error(apiErrorMessage(err, 'Could not send email')); }
   };
 
@@ -119,8 +125,8 @@ export default function Verification() {
           ) : (
             <>
               <p className="text-sm text-slate-600">Confirm your email to secure your account and earn the Email badge.</p>
-              <Button className="mt-3" variant="secondary" onClick={onResendEmail} loading={resendEmail.isPending}>
-                <Mail className="h-4 w-4" /> Resend verification email
+                <Button className="mt-3" variant="secondary" onClick={onResendEmail} loading={resendEmail.isPending}>
+                  <Mail className="h-4 w-4" /> Verify email address
               </Button>
             </>
           )}
@@ -185,7 +191,7 @@ export default function Verification() {
                 type="file"
                 className="hidden"
                 multiple
-                accept=".pdf,.doc,.docx,.txt,image/*"
+                accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png"
                 onChange={(e) => setFiles(Array.from(e.target.files).slice(0, 3))}
               />
             </label>

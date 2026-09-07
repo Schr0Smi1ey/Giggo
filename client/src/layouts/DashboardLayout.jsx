@@ -12,9 +12,13 @@ const adminItems = [
   { to: '/dashboard/admin/verification', label: 'Review Queue', icon: ShieldCheck },
 ];
 
+const freelancerItems = [
+  { to: '/dashboard/verification', label: 'Verification', icon: ShieldCheck },
+];
+
 export function DashboardLayout() {
   const { hasRole } = useAuth();
-  const nav = [...items, ...(hasRole('admin') ? adminItems : [])];
+  const nav = [...items, ...(hasRole('freelancer') ? freelancerItems : []), ...(hasRole('admin') ? adminItems : [])];
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="mx-auto flex max-w-7xl gap-6 px-4 py-6">

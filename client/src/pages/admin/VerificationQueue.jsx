@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { ShieldCheck, FileText, Check, X, Inbox, ExternalLink } from 'lucide-react';
+import { ShieldCheck, FileText, Check, X, Inbox } from 'lucide-react';
 import { useVerificationQueue, useDecideRequest } from '../../services/verification.js';
 import { apiErrorMessage } from '../../api/client.js';
-import { fileUrl, initials } from '../../utils/format.js';
+import { initials } from '../../utils/format.js';
+import { api } from '../../api/client.js';
 import { Button } from '../../components/Button.jsx';
 import { Textarea } from '../../components/Textarea.jsx';
 import { Skeleton } from '../../components/Loaders.jsx';
@@ -15,7 +16,7 @@ function fmtDate(d) {
   return new Date(d).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
 }
 
-function RequestCard({ req, onDecide, deciding }) {
+function RequestCard({ req, onDecide, deciding, onOpenDocument }) {
   const [note, setNote] = useState('');
   const u = req.user || {};
   const decide = (decision) => onDecide({ id: req.id || req._id, decision, reviewNote: note.trim() });
@@ -44,9 +45,9 @@ function RequestCard({ req, onDecide, deciding }) {
         <ul className="mt-1 space-y-1">
           {(req.documents || []).map((d, i) => (
             <li key={i}>
-              <a href={fileUrl(d.url)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-sm text-brand-700 hover:underline">
-                <FileText className="h-4 w-4" /> {d.filename || `Document ${i + 1}`} <ExternalLink className="h-3 w-3" />
-              </a>
+              <button type="button" onClick={() => onOpenDocument(req.id || req._id, i, d.filename)} className="inline-flex items-center gap-1.5 text-sm text-brand-700 hover:underline">
+                <FileText className="h-4 w-4" /> Open {d.filename || `Document ${i + 1}`}
+              </button>
             </li>
           ))}
           {!req.documents?.length && <li className="text-sm text-slate-400">No documents attached.</li>}
@@ -87,6 +88,22 @@ export default function VerificationQueue() {
     }
   };
 
+  const onOpenDocument = async (requestId, index, filename) => {
+    try {
+      const response = await api.get(`/verification/admin/requests/${requestId}/documents/${index}`, { responseType: 'blob' });
+      const url = URL.createObjectURL(response.data);
+      const link = document.createElement('a');
+      link.href = url;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link.download = filename || 'verification-document';
+      link.click();
+      window.setTimeout(() => URL.revokeObjectURL(url), 30_000);
+    } catch (err) {
+      toast.error(apiErrorMessage(err, 'Could not open private document'));
+    }
+  };
+
   return (
     <div className="pb-16">
       <div className="flex items-center gap-2 text-brand-700">
@@ -113,7 +130,7 @@ export default function VerificationQueue() {
       ) : data?.items?.length ? (
         <ul className="mt-6 grid gap-4 md:grid-cols-2">
           {data.items.map((req) => (
-            <RequestCard key={req.id || req._id} req={req} onDecide={onDecide} deciding={decide.isPending} />
+            <RequestCard key={req.id || req._id} req={req} onDecide={onDecide} deciding={decide.isPending} onOpenDocument={onOpenDocument} />
           ))}
         </ul>
       ) : (
