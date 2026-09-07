@@ -10,6 +10,8 @@ export const profileController = {
   getMine: asyncHandler(async (req, res) => ok(res, profileData(await profileService.getMine(req.user)))),
   updateMine: asyncHandler(async (req, res) => ok(res, profileData(await profileService.updateMine(req.user, req.body)), 'Profile updated')),
   completeOnboarding: asyncHandler(async (req, res) => ok(res, profileData(await profileService.completeOnboarding(req.user, req.body)), 'Onboarding completed')),
+  uploadCv: asyncHandler(async (req, res) => ok(res, profileData(await profileService.uploadCv(req.user, req.file)), 'CV uploaded')),
+  removeCv: asyncHandler(async (req, res) => ok(res, profileData(await profileService.removeCv(req.user)), 'CV removed')),
   getPublic: asyncHandler(async (req, res) => {
     const profile = await profileService.getPublicFreelancer(req.params.userId);
     return ok(res, { profile: { ...profile.toJSON(), type: 'freelancer' } });

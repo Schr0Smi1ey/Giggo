@@ -25,3 +25,15 @@ MongoDB instance. Use a real MongoDB URI when persistent local data is needed.
 - `POST /api/profiles/me/onboarding`
 - `GET /api/profiles/talent`
 - `GET /api/profiles/:userId`
+
+## CV analysis
+
+Giggo uses a deterministic local mock analyser by default. It does not send CV text to a third party.
+To opt into a real provider later, set `AI_PROVIDER=openai` plus `AI_API_KEY` in your local `.env`.
+
+- `POST /api/profiles/me/cv`
+- `DELETE /api/profiles/me/cv`
+- `POST /api/ai/cv/analyze`
+- `GET /api/ai/cv/latest`
+- `GET /api/ai/cv/analyses`
+- `POST /api/ai/cv/analyses/:id/apply-skills`

@@ -79,6 +79,12 @@ const freelancerProfileSchema = new Schema(
     experience: { type: [experienceSchema], default: [] },
     certifications: { type: [certificationSchema], default: [] },
     portfolio: { type: [portfolioSchema], default: [] },
+    cv: {
+      filename: { type: String, default: '' },
+      path: { type: String, default: '' },
+      provider: { type: String, default: '' },
+      uploadedAt: { type: Date },
+    },
     visibility: { type: String, enum: ['public', 'private'], default: 'private', index: true },
     completeness: { type: Number, min: 0, max: 100, default: 0 },
     onboardingCompleted: { type: Boolean, default: false },
@@ -108,6 +114,13 @@ freelancerProfileSchema.methods.computeCompleteness = function computeCompletene
 freelancerProfileSchema.pre('save', function recalculateCompleteness(next) {
   this.completeness = this.computeCompleteness();
   next();
+});
+
+freelancerProfileSchema.set('toJSON', {
+  transform: (_document, result) => {
+    if (result.cv) delete result.cv.path;
+    return result;
+  },
 });
 
 export const FreelancerProfile = mongoose.model('FreelancerProfile', freelancerProfileSchema);

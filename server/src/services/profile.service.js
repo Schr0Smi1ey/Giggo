@@ -3,6 +3,7 @@ import { ClientProfile } from '../models/ClientProfile.js';
 import { FreelancerProfile } from '../models/FreelancerProfile.js';
 import { ROLES } from '../models/User.js';
 import { ApiError } from '../utils/ApiError.js';
+import { removePrivateDocument, storePrivateDocument } from './storage.service.js';
 
 const freelancerFields = ['title', 'overview', 'category', 'hourlyRate', 'availability', 'skills', 'languages', 'location', 'links', 'education', 'experience', 'certifications', 'portfolio', 'visibility'];
 const clientFields = ['companyName', 'companyDescription', 'industry', 'website', 'teamSize', 'location'];
@@ -72,9 +73,30 @@ export const profileService = {
     return { profile, type };
   },
 
+  async uploadCv(user, file) {
+    if (profileTypeFor(user) !== 'freelancer') throw ApiError.forbidden('Only freelancers can upload CVs');
+    if (!file?.buffer) throw ApiError.badRequest('Choose a CV file to upload');
+    const { profile } = await getOrCreate(user);
+    const stored = await storePrivateDocument(file.buffer, file.originalname);
+    await removePrivateDocument(profile.cv?.path);
+    profile.cv = { ...stored, provider: 'local', uploadedAt: new Date() };
+    await profile.save();
+    return { profile, type: 'freelancer' };
+  },
+
+  async removeCv(user) {
+    if (profileTypeFor(user) !== 'freelancer') throw ApiError.forbidden('Only freelancers can remove CVs');
+    const { profile } = await getOrCreate(user);
+    await removePrivateDocument(profile.cv?.path);
+    profile.cv = undefined;
+    await profile.save();
+    return { profile, type: 'freelancer' };
+  },
+
   async getPublicFreelancer(userId) {
     if (!mongoose.isValidObjectId(userId)) throw ApiError.notFound('Freelancer profile not found');
     const profile = await FreelancerProfile.findOne({ user: userId, visibility: 'public', onboardingCompleted: true })
+      .select('-cv')
       .populate('user', 'name role status');
     if (!profile || !profile.user || profile.user.status !== 'active') throw ApiError.notFound('Freelancer profile not found');
     return profile;
@@ -95,7 +117,7 @@ export const profileService = {
     }[sort] || { updatedAt: -1 };
     const skip = (page - 1) * limit;
     const [items, total] = await Promise.all([
-      FreelancerProfile.find(filter).populate('user', 'name role status').sort(sortBy).skip(skip).limit(limit),
+      FreelancerProfile.find(filter).select('-cv').populate('user', 'name role status').sort(sortBy).skip(skip).limit(limit),
       FreelancerProfile.countDocuments(filter),
     ]);
     return { items: items.filter((profile) => profile.user?.status === 'active'), page, limit, total };
