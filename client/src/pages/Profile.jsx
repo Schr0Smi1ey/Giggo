@@ -12,11 +12,10 @@ import { Select } from '../components/Select.jsx';
 import { Button } from '../components/Button.jsx';
 import { TagInput } from '../components/TagInput.jsx';
 import { RepeatableList } from '../components/RepeatableList.jsx';
-import { AvatarUpload } from '../components/AvatarUpload.jsx';
-import { CvUpload } from '../components/CvUpload.jsx';
 import { ProfileCompletion } from '../components/ProfileCompletion.jsx';
 import { Skeleton } from '../components/Loaders.jsx';
 import { dateRange } from '../utils/format.js';
+import ClientProfile from './ClientProfile.jsx';
 
 const BLANK = {
   title: '', category: '', overview: '', hourlyRate: '', availability: 'not_available',
@@ -25,7 +24,33 @@ const BLANK = {
   education: [], experience: [], certifications: [], portfolio: [], visibility: 'private',
 };
 
+function toFreelancerForm(profile) {
+  return {
+    ...BLANK,
+    title: profile.title || '',
+    category: profile.category || '',
+    overview: profile.overview || '',
+    hourlyRate: profile.hourlyRate ?? '',
+    availability: profile.availability || BLANK.availability,
+    skills: profile.skills || [],
+    languages: profile.languages || [],
+    location: { ...BLANK.location, ...profile.location },
+    links: { ...BLANK.links, ...profile.links },
+    education: profile.education || [],
+    experience: profile.experience || [],
+    certifications: profile.certifications || [],
+    portfolio: profile.portfolio || [],
+    visibility: profile.visibility || BLANK.visibility,
+  };
+}
+
 export default function Profile() {
+  const { hasRole } = useAuth();
+  if (hasRole('client') && !hasRole('freelancer')) return <ClientProfile />;
+  return <FreelancerProfile />;
+}
+
+function FreelancerProfile() {
   const { user } = useAuth();
   const uid = user?._id || user?.id;
   const { data: profile, isLoading } = useMyProfile();
@@ -33,7 +58,7 @@ export default function Profile() {
   const [form, setForm] = useState(BLANK);
 
   useEffect(() => {
-    if (profile) setForm({ ...BLANK, ...profile, location: { ...BLANK.location, ...profile.location }, links: { ...BLANK.links, ...profile.links } });
+    if (profile) setForm(toFreelancerForm(profile));
   }, [profile]);
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
@@ -55,7 +80,6 @@ export default function Profile() {
     <div className="max-w-3xl pb-16">
       {/* Header */}
       <div className="flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:flex-row sm:items-center">
-        <AvatarUpload />
         <div className="min-w-0 flex-1">
           <h1 className="text-xl font-bold text-slate-900">{user?.name}</h1>
           <p className="truncate text-sm text-slate-500">{form.title || 'Add a professional headline'}</p>
@@ -211,9 +235,6 @@ export default function Profile() {
           )}
         />
       </div>
-
-      {/* CV + visibility */}
-      <div className="mt-6"><CvUpload cv={profile?.cv} /></div>
 
       <section className="mt-6 flex items-center justify-between rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="flex items-center gap-3">

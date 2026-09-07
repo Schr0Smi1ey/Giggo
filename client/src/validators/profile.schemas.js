@@ -43,6 +43,21 @@ export const detailsSchema = z.object({
     .optional(),
 });
 
+export const clientCompanySchema = z.object({
+  companyName: z.string().trim().min(2, 'Company name is required').max(150),
+  industry: z.string().trim().min(2, 'Industry is required').max(100),
+  companyDescription: z.string().trim().min(50, 'Write at least 50 characters').max(5000),
+});
+
+export const clientDetailsSchema = z.object({
+  website: optionalUrl,
+  teamSize: z.enum(['1-10', '11-50', '51-200', '201+']),
+  location: z.object({
+    country: z.string().trim().min(1, 'Country is required').max(80),
+    city: z.string().trim().max(80).optional().or(z.literal('')),
+  }),
+});
+
 // Standalone editors (profile page sections)
 export const educationItemSchema = z.object({
   school: z.string().trim().min(1, 'School is required').max(150),
