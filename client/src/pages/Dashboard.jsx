@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useMyProfile } from '../services/profile.js';
-import { CheckCircle2, Circle, ArrowRight, Search } from 'lucide-react';
+import { CheckCircle2, Circle, ArrowRight, Search, Sparkles } from 'lucide-react';
 
 const cards = {
   freelancer: [
@@ -77,6 +77,15 @@ export default function Dashboard() {
                   : profile?.onboardingCompleted
                     ? `Complete your ${isClient ? 'company' : 'profile'} (${completeness}%)`
                     : `Set up your ${isClient ? 'company' : 'freelancer'} profile`}
+                <ArrowRight className="h-3.5 w-3.5 opacity-0 transition group-hover:opacity-100" />
+              </Link>
+            </li>
+          )}
+          {isFreelancer && (
+            <li>
+              <Link to="/dashboard/cv-analysis" className="group flex items-center gap-2 text-slate-700 hover:text-brand-700">
+                <Sparkles className="h-4 w-4 text-brand-600" />
+                Analyze your CV
                 <ArrowRight className="h-3.5 w-3.5 opacity-0 transition group-hover:opacity-100" />
               </Link>
             </li>

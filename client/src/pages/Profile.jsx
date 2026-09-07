@@ -13,6 +13,7 @@ import { Button } from '../components/Button.jsx';
 import { TagInput } from '../components/TagInput.jsx';
 import { RepeatableList } from '../components/RepeatableList.jsx';
 import { ProfileCompletion } from '../components/ProfileCompletion.jsx';
+import { CvUpload } from '../components/CvUpload.jsx';
 import { Skeleton } from '../components/Loaders.jsx';
 import { dateRange } from '../utils/format.js';
 import ClientProfile from './ClientProfile.jsx';
@@ -235,6 +236,8 @@ function FreelancerProfile() {
           )}
         />
       </div>
+
+      <div className="mt-6"><CvUpload cv={profile?.cv} /></div>
 
       <section className="mt-6 flex items-center justify-between rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="flex items-center gap-3">
