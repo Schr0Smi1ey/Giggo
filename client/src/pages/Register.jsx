@@ -22,8 +22,8 @@ export default function Register() {
   const onSubmit = async (values) => {
     try {
       await signup(values);
-      toast.success('Account created!');
-      navigate('/dashboard', { replace: true });
+      toast.success('Check your inbox to confirm your email address before logging in.');
+      navigate('/login', { replace: true, state: { email: values.email, confirmationPending: true } });
     } catch (err) {
       toast.error(apiErrorMessage(err, 'Registration failed'));
     }

@@ -1,10 +1,13 @@
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { authApi } from '../api/auth.js';
 import { apiErrorMessage } from '../api/client.js';
+import { completeAuthRedirect } from '../services/supabaseAuth.js';
+import { useAuth } from '../context/AuthContext.jsx';
+import { Spinner } from '../components/Loaders.jsx';
 import { Input } from '../components/Input.jsx';
 import { Button } from '../components/Button.jsx';
 
@@ -17,14 +20,24 @@ const schema = z
   .refine((d) => d.newPassword === d.confirm, { message: 'Passwords do not match', path: ['confirm'] });
 
 export default function ResetPassword() {
-  const [params] = useSearchParams();
-  const token = params.get('token') || '';
   const navigate = useNavigate();
+  const { updatePassword } = useAuth();
+  const [status, setStatus] = useState('loading');
+  const operation = useRef(null);
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({ resolver: zodResolver(schema) });
+
+  useEffect(() => {
+    let active = true;
+    operation.current ||= completeAuthRedirect();
+    operation.current
+      .then((session) => { if (active) setStatus(session ? 'ready' : 'error'); })
+      .catch(() => { if (active) setStatus('error'); });
+    return () => { active = false; };
+  }, []);
 
   const onSubmit = async ({ newPassword }) => {
     try {
-      await authApi.resetPassword({ token, newPassword });
+      await updatePassword({ newPassword });
       toast.success('Password reset — please log in');
       navigate('/login');
     } catch (err) {
@@ -32,7 +45,11 @@ export default function ResetPassword() {
     }
   };
 
-  if (!token) {
+  if (status === 'loading') {
+    return <div className="flex min-h-[70vh] items-center justify-center"><Spinner className="h-8 w-8" /></div>;
+  }
+
+  if (status === 'error') {
     return (
       <div className="mx-auto flex min-h-[70vh] max-w-md flex-col justify-center px-4 text-center">
         <p className="text-slate-600">Invalid or missing reset token.</p>

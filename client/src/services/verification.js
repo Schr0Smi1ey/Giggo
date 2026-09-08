@@ -17,10 +17,6 @@ export function useMyRequests(options = {}) {
   return useQuery({ queryKey: KEYS.myRequests, queryFn: verificationApi.myRequests, ...options });
 }
 
-export function useResendEmail() {
-  return useMutation({ mutationFn: verificationApi.resendEmail });
-}
-
 export function useSendPhoneCode() {
   return useMutation({ mutationFn: verificationApi.sendPhone });
 }

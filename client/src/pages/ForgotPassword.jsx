@@ -2,21 +2,20 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
-import { authApi } from '../api/auth.js';
 import { apiErrorMessage } from '../api/client.js';
+import { useAuth } from '../context/AuthContext.jsx';
 import { Input } from '../components/Input.jsx';
 import { Button } from '../components/Button.jsx';
 
 export default function ForgotPassword() {
   const { register, handleSubmit, formState: { isSubmitting } } = useForm({ defaultValues: { email: '' } });
   const [sent, setSent] = useState(false);
-  const [devToken, setDevToken] = useState(null);
+  const { requestPasswordReset } = useAuth();
 
   const onSubmit = async ({ email }) => {
     try {
-      const res = await authApi.forgotPassword(email);
+      await requestPasswordReset(email);
       setSent(true);
-      if (res?.devResetToken) setDevToken(res.devResetToken); // dev convenience only
     } catch (err) {
       toast.error(apiErrorMessage(err));
     }
@@ -30,14 +29,6 @@ export default function ForgotPassword() {
       {sent ? (
         <div className="mt-6 rounded-lg border border-brand-200 bg-brand-50 p-4 text-sm text-brand-800">
           If that email exists, a reset link has been sent.
-          {devToken && (
-            <p className="mt-2 break-all text-xs text-slate-600">
-              Dev reset link:{' '}
-              <Link className="text-brand-700 underline" to={`/reset-password?token=${devToken}`}>
-                /reset-password?token={devToken.slice(0, 12)}…
-              </Link>
-            </p>
-          )}
         </div>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4" noValidate>

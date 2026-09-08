@@ -3,14 +3,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { changePasswordSchema } from '../validators/auth.schemas.js';
-import { authApi } from '../api/auth.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import { apiErrorMessage } from '../api/client.js';
 import { Input } from '../components/Input.jsx';
 import { Button } from '../components/Button.jsx';
 
 export default function Settings() {
-  const { logout } = useAuth();
+  const { logout, updatePassword } = useAuth();
   const navigate = useNavigate();
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(changePasswordSchema),
@@ -18,7 +17,7 @@ export default function Settings() {
 
   const onChangePassword = async (values) => {
     try {
-      await authApi.changePassword({ currentPassword: values.currentPassword, newPassword: values.newPassword });
+      await updatePassword({ currentPassword: values.currentPassword, newPassword: values.newPassword });
       toast.success('Password changed — please log in again');
       reset();
       await logout();

@@ -2,7 +2,6 @@ import { api } from './client.js';
 
 export const verificationApi = {
   getStatus: () => api.get('/verification/status').then((r) => r.data.data),
-  resendEmail: () => api.post('/verification/email/resend').then((r) => r.data.data),
   sendPhone: (phone) => api.post('/verification/phone/send', { phone }).then((r) => r.data.data),
   verifyPhone: (code) => api.post('/verification/phone/verify', { code }).then((r) => r.data.data),
 

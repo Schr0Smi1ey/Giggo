@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { ShieldCheck, Mail, Phone, IdCard, Upload, X, Clock, CheckCircle2, XCircle, AlertTriangle } from 'lucide-react';
 import {
-  useVerificationStatus, useResendEmail, useSendPhoneCode, useVerifyPhone,
+  useVerificationStatus, useSendPhoneCode, useVerifyPhone,
   useSubmitRequest, useMyRequests, useCancelRequest,
 } from '../services/verification.js';
 import { apiErrorMessage } from '../api/client.js';
@@ -12,6 +11,7 @@ import { Input } from '../components/Input.jsx';
 import { Textarea } from '../components/Textarea.jsx';
 import { Skeleton } from '../components/Loaders.jsx';
 import { VerificationBadges } from '../components/VerificationBadges.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
 
 const STATUS_STYLES = {
   pending: { icon: Clock, cls: 'bg-amber-50 text-amber-700 ring-amber-200' },
@@ -40,10 +40,9 @@ function Card({ title, icon: Icon, children, done }) {
 }
 
 export default function Verification() {
-  const navigate = useNavigate();
   const { data: status, isLoading } = useVerificationStatus();
   const { data: requests } = useMyRequests();
-  const resendEmail = useResendEmail();
+  const { user, resendEmailConfirmation } = useAuth();
   const sendPhone = useSendPhoneCode();
   const verifyPhone = useVerifyPhone();
   const submitReq = useSubmitRequest();
@@ -55,14 +54,16 @@ export default function Verification() {
   const [reqType, setReqType] = useState('identity');
   const [note, setNote] = useState('');
   const [files, setFiles] = useState([]);
+  const [resendingEmail, setResendingEmail] = useState(false);
 
   const onResendEmail = async () => {
     try {
-      const out = await resendEmail.mutateAsync();
-      if (out.devVerifyToken) return navigate(`/verify-email?token=${encodeURIComponent(out.devVerifyToken)}`);
+      setResendingEmail(true);
+      await resendEmailConfirmation(user?.email);
       toast.success('Verification email sent — check your inbox.');
     }
     catch (err) { toast.error(apiErrorMessage(err, 'Could not send email')); }
+    finally { setResendingEmail(false); }
   };
 
   const onSendCode = async () => {
@@ -125,7 +126,7 @@ export default function Verification() {
           ) : (
             <>
               <p className="text-sm text-slate-600">Confirm your email to secure your account and earn the Email badge.</p>
-                <Button className="mt-3" variant="secondary" onClick={onResendEmail} loading={resendEmail.isPending}>
+                <Button className="mt-3" variant="secondary" onClick={onResendEmail} loading={resendingEmail}>
                   <Mail className="h-4 w-4" /> Verify email address
               </Button>
             </>

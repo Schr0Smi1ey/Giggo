@@ -58,8 +58,13 @@ export default function Dashboard() {
           <li className="flex items-center gap-2 text-slate-700">
             <CheckCircle2 className="h-4 w-4 text-brand-600" /> Account created
           </li>
-          <li className="flex items-center gap-2 text-slate-500">
-            <Circle className="h-4 w-4" /> {user?.emailVerified ? 'Email verified' : 'Verify your email'}
+          <li className={`flex items-center gap-2 ${user?.emailVerified ? 'text-slate-700' : 'text-slate-500'}`}>
+            {user?.emailVerified ? (
+              <CheckCircle2 className="h-4 w-4 text-brand-600" aria-hidden="true" />
+            ) : (
+              <Circle className="h-4 w-4" aria-hidden="true" />
+            )}
+            {user?.emailVerified ? 'Email verified' : 'Verify your email'}
           </li>
           {hasMarketplaceProfile && (
             <li>
