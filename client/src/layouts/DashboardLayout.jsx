@@ -1,5 +1,5 @@
 import { Outlet, NavLink, Link } from 'react-router-dom';
-import { Briefcase, LayoutDashboard, User, Settings, ShieldCheck } from 'lucide-react';
+import { Briefcase, Bookmark, LayoutDashboard, User, Settings, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
 
 const items = [
@@ -13,12 +13,22 @@ const adminItems = [
 ];
 
 const freelancerItems = [
+  { to: '/dashboard/saved-jobs', label: 'Saved jobs', icon: Bookmark },
   { to: '/dashboard/verification', label: 'Verification', icon: ShieldCheck },
+];
+
+const clientItems = [
+  { to: '/dashboard/jobs', label: 'My jobs', icon: Briefcase },
 ];
 
 export function DashboardLayout() {
   const { hasRole } = useAuth();
-  const nav = [...items, ...(hasRole('freelancer') ? freelancerItems : []), ...(hasRole('admin') ? adminItems : [])];
+  const nav = [
+    ...items,
+    ...(hasRole('client') ? clientItems : []),
+    ...(hasRole('freelancer') ? freelancerItems : []),
+    ...(hasRole('admin') ? adminItems : []),
+  ];
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="mx-auto flex max-w-7xl gap-6 px-4 py-6">

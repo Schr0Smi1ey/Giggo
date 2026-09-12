@@ -5,6 +5,7 @@ import { DashboardLayout } from './layouts/DashboardLayout.jsx';
 import { ProtectedRoute } from './routes/ProtectedRoute.jsx';
 import { ErrorBoundary } from './components/ErrorBoundary.jsx';
 import { PageLoader } from './components/Loaders.jsx';
+import { useAuth } from './context/AuthContext.jsx';
 
 // Eager (small, always-needed) pages.
 import Home from './pages/Home.jsx';
@@ -31,6 +32,13 @@ const ForgotPassword = lazy(() => import('./pages/ForgotPassword.jsx'));
 const ResetPassword = lazy(() => import('./pages/ResetPassword.jsx'));
 const AuthCallback = lazy(() => import('./pages/AuthCallback.jsx'));
 const Placeholder = lazy(() => import('./pages/Placeholder.jsx'));
+const ClientProfile = lazy(() => import('./pages/ClientProfile.jsx'));
+
+function ProfileDestination() {
+  const { hasRole } = useAuth();
+  const isClientOnly = hasRole('client') && !hasRole('freelancer');
+  return isClientOnly ? <ClientProfile /> : <Profile />;
+}
 
 export default function App() {
   return (
@@ -79,11 +87,11 @@ export default function App() {
             }
           >
             <Route index element={<Dashboard />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="jobs" element={<MyJobs />} />
-            <Route path="jobs/new" element={<PostJob />} />
-            <Route path="jobs/:id/edit" element={<PostJob />} />
-            <Route path="saved-jobs" element={<SavedJobs />} />
+            <Route path="profile" element={<ProfileDestination />} />
+            <Route path="jobs" element={<ProtectedRoute roles={['client']}><MyJobs /></ProtectedRoute>} />
+            <Route path="jobs/new" element={<ProtectedRoute roles={['client']}><PostJob /></ProtectedRoute>} />
+            <Route path="jobs/:id/edit" element={<ProtectedRoute roles={['client']}><PostJob /></ProtectedRoute>} />
+            <Route path="saved-jobs" element={<ProtectedRoute roles={['freelancer']}><SavedJobs /></ProtectedRoute>} />
             <Route path="cv-analysis" element={<CvAnalysis />} />
             <Route path="verification" element={<ProtectedRoute roles={['freelancer']}><Verification /></ProtectedRoute>} />
             <Route
