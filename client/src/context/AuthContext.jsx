@@ -1,6 +1,14 @@
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { authApi } from '../api/auth.js';
-import { setAccessToken } from '../api/client.js';
+import { api, setAccessToken } from '../api/client.js';
+import { supabase } from '../lib/supabase.js';
+import {
+  requestPasswordReset,
+  resendEmailConfirmation,
+  signInWithEmail,
+  signOut,
+  signUpWithEmail,
+  updatePassword,
+} from '../services/supabaseAuth.js';
 
 const AuthContext = createContext(null);
 
@@ -8,43 +16,60 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // On mount, try to restore a session via the refresh cookie.
+  const loadDomainUser = useCallback(async (session) => {
+    if (!session?.access_token) {
+      setAccessToken(null);
+      setUser(null);
+      return null;
+    }
+
+    setAccessToken(session.access_token);
+    const response = await api.get('/auth/me');
+    const currentUser = response.data.data.user;
+    setUser(currentUser);
+    return currentUser;
+  }, []);
+
   useEffect(() => {
     let active = true;
-    (async () => {
+    const synchronize = async (session) => {
       try {
-        const { accessToken, user: u } = await authApi.refresh();
-        if (!active) return;
-        setAccessToken(accessToken);
-        setUser(u || (await authApi.me()).user);
+        await loadDomainUser(session);
       } catch {
-        setAccessToken(null);
+        if (active) {
+          setAccessToken(null);
+          setUser(null);
+        }
       } finally {
         if (active) setLoading(false);
       }
-    })();
-    return () => { active = false; };
-  }, []);
+    };
+
+    void supabase.auth.getSession().then(({ data }) => synchronize(data.session));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      window.setTimeout(() => { void synchronize(session); }, 0);
+    });
+
+    return () => { active = false; subscription.unsubscribe(); };
+  }, [loadDomainUser]);
 
   const login = useCallback(async (credentials) => {
-    const { accessToken, user: u } = await authApi.login(credentials);
-    setAccessToken(accessToken);
-    setUser(u);
-    return u;
-  }, []);
+    const session = await signInWithEmail(credentials);
+    return loadDomainUser(session);
+  }, [loadDomainUser]);
 
   const register = useCallback(async (payload) => {
-    const { accessToken, user: u } = await authApi.register(payload);
-    setAccessToken(accessToken);
-    setUser(u);
-    return u;
+    return signUpWithEmail(payload);
   }, []);
 
   const logout = useCallback(async () => {
-    try { await authApi.logout(); } catch { /* ignore */ }
-    setAccessToken(null);
-    setUser(null);
+    try { await signOut(); } finally { setAccessToken(null); setUser(null); }
   }, []);
+
+  const refreshUser = useCallback(async () => {
+    const { data } = await supabase.auth.getSession();
+    return loadDomainUser(data.session);
+  }, [loadDomainUser]);
 
   const value = {
     user,
@@ -55,6 +80,10 @@ export function AuthProvider({ children }) {
     login,
     register,
     logout,
+    refreshUser,
+    resendEmailConfirmation,
+    requestPasswordReset,
+    updatePassword,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
