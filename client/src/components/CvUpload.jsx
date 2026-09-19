@@ -1,13 +1,12 @@
 import { useState, useRef } from 'react';
 import toast from 'react-hot-toast';
-import { FileText, Upload, Trash2, Loader2, ExternalLink } from 'lucide-react';
+import { FileText, Upload, Trash2, Loader2 } from 'lucide-react';
 import { useUploadCv, useRemoveCv } from '../services/profile.js';
 import { apiErrorMessage } from '../api/client.js';
-import { fileUrl } from '../utils/format.js';
 import { Button } from './Button.jsx';
 
 const MAX_MB = 10;
-const ACCEPT = '.pdf,.doc,.docx,.txt';
+const ACCEPT = '.pdf,.docx,.txt';
 
 /** CV upload card. `cv` is the profile.cv object ({ url, filename, uploadedAt }). */
 export function CvUpload({ cv }) {
@@ -16,6 +15,7 @@ export function CvUpload({ cv }) {
   const upload = useUploadCv();
   const remove = useRemoveCv();
   const busy = upload.isPending || remove.isPending;
+  const hasCv = Boolean(cv?.filename);
 
   const onPick = async (e) => {
     const file = e.target.files?.[0];
@@ -54,21 +54,14 @@ export function CvUpload({ cv }) {
           </div>
           <div>
             <h3 className="font-semibold text-slate-900">Resume / CV</h3>
-            {cv?.url ? (
-              <a
-                href={fileUrl(cv.url)}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-0.5 inline-flex items-center gap-1 text-sm text-brand-700 hover:underline"
-              >
-                {cv.filename || 'View document'} <ExternalLink className="h-3.5 w-3.5" />
-              </a>
+            {hasCv ? (
+              <p className="mt-0.5 text-sm text-brand-700">{cv.filename}</p>
             ) : (
-              <p className="mt-0.5 text-sm text-slate-500">PDF, DOC, DOCX or TXT — up to {MAX_MB}MB</p>
+              <p className="mt-0.5 text-sm text-slate-500">PDF, DOCX or TXT — up to {MAX_MB}MB</p>
             )}
           </div>
         </div>
-        {cv?.url && (
+        {hasCv && (
           <button
             type="button"
             onClick={onRemove}
@@ -90,7 +83,7 @@ export function CvUpload({ cv }) {
       <div className="mt-4">
         <Button variant="secondary" size="sm" onClick={() => inputRef.current?.click()} disabled={busy}>
           {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
-          {cv?.url ? 'Replace CV' : 'Upload CV'}
+          {hasCv ? 'Replace CV' : 'Upload CV'}
         </Button>
         <input ref={inputRef} type="file" accept={ACCEPT} className="hidden" onChange={onPick} />
       </div>

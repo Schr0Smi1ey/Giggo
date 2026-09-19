@@ -84,7 +84,7 @@ export default function App() {
             <Route path="jobs/new" element={<PostJob />} />
             <Route path="jobs/:id/edit" element={<PostJob />} />
             <Route path="saved-jobs" element={<SavedJobs />} />
-            <Route path="cv-analysis" element={<CvAnalysis />} />
+            <Route path="cv-analysis" element={<ProtectedRoute roles={['freelancer']}><CvAnalysis /></ProtectedRoute>} />
             <Route path="verification" element={<ProtectedRoute roles={['freelancer']}><Verification /></ProtectedRoute>} />
             <Route
               path="admin/verification"

@@ -9,6 +9,8 @@ import { Button } from '../components/Button.jsx';
 import { Textarea } from '../components/Textarea.jsx';
 import { Skeleton } from '../components/Loaders.jsx';
 import { ScoreGauge } from '../components/ScoreGauge.jsx';
+import { CvUpload } from '../components/CvUpload.jsx';
+import { useMyProfile } from '../services/profile.js';
 
 const PRIORITY_STYLES = {
   high: 'bg-red-50 text-red-700 ring-red-200',
@@ -23,6 +25,7 @@ function fmtDate(d) {
 export default function CvAnalysis() {
   const [text, setText] = useState('');
   const [selectedId, setSelectedId] = useState(null);
+  const { data: profile } = useMyProfile();
 
   const { data: latest, isLoading: loadingLatest } = useCvLatest();
   const { data: history } = useCvAnalyses({ limit: 20 });
@@ -84,6 +87,7 @@ export default function CvAnalysis() {
       <div className="mt-6 grid gap-6 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
           {/* PLACEHOLDER_CONTROLS */}
+          <CvUpload cv={profile?.cv} />
           <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
             <h2 className="font-semibold text-slate-900">Run an analysis</h2>
             <p className="mt-1 text-sm text-slate-500">

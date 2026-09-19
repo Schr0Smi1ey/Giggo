@@ -13,6 +13,7 @@ import { Button } from '../components/Button.jsx';
 import { TagInput } from '../components/TagInput.jsx';
 import { RepeatableList } from '../components/RepeatableList.jsx';
 import { ProfileCompletion } from '../components/ProfileCompletion.jsx';
+import { CvUpload } from '../components/CvUpload.jsx';
 import { Skeleton } from '../components/Loaders.jsx';
 import { dateRange } from '../utils/format.js';
 import ClientProfile from './ClientProfile.jsx';
@@ -107,6 +108,10 @@ function FreelancerProfile() {
         <Textarea label="Overview" rows={5} value={form.overview} onChange={(e) => set('overview', e.target.value)} placeholder="Summarize your experience, strengths, and what you offer clients." hint={`${(form.overview || '').length}/5000`} />
         <TagInput label="Skills" value={form.skills} onChange={(v) => set('skills', v)} placeholder="Add a skill and press Enter" hint="Add at least 3 (max 30)." />
       </section>
+
+      <div className="mt-6">
+        <CvUpload cv={profile?.cv} />
+      </div>
 
       {/* Location & links */}
       <section className="mt-6 space-y-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">

@@ -1,5 +1,5 @@
 import { Outlet, NavLink, Link } from 'react-router-dom';
-import { Briefcase, LayoutDashboard, User, Settings, ShieldCheck } from 'lucide-react';
+import { Briefcase, LayoutDashboard, User, Settings, ShieldCheck, Sparkles } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
 
 const items = [
@@ -13,6 +13,7 @@ const adminItems = [
 ];
 
 const freelancerItems = [
+  { to: '/dashboard/cv-analysis', label: 'CV Analyzer', icon: Sparkles },
   { to: '/dashboard/verification', label: 'Verification', icon: ShieldCheck },
 ];
 
