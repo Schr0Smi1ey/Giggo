@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { createContext, useContext, useEffect, useRef, useState, useCallback } from 'react';
 import { api, setAccessToken } from '../api/client.js';
 import { supabase } from '../lib/supabase.js';
 import {
@@ -15,20 +15,50 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const currentUserRef = useRef(null);
+  const synchronizedTokenRef = useRef(null);
+  const syncInFlightRef = useRef(null);
+
+  const updateUser = useCallback((value) => {
+    if (typeof value === 'function') {
+      setUser((previous) => {
+        const next = value(previous);
+        currentUserRef.current = next;
+        return next;
+      });
+      return;
+    }
+    currentUserRef.current = value;
+    setUser(value);
+  }, []);
 
   const loadDomainUser = useCallback(async (session) => {
     if (!session?.access_token) {
       setAccessToken(null);
-      setUser(null);
+      synchronizedTokenRef.current = null;
+      syncInFlightRef.current = null;
+      updateUser(null);
       return null;
     }
 
-    setAccessToken(session.access_token);
-    const response = await api.get('/auth/me');
-    const currentUser = response.data.data.user;
-    setUser(currentUser);
-    return currentUser;
-  }, []);
+    const token = session.access_token;
+    setAccessToken(token);
+    if (synchronizedTokenRef.current === token && currentUserRef.current) return currentUserRef.current;
+    if (syncInFlightRef.current?.token === token) return syncInFlightRef.current.promise;
+
+    const promise = api.get('/auth/me').then((response) => {
+      const currentUser = response.data.data.user;
+      synchronizedTokenRef.current = token;
+      updateUser(currentUser);
+      return currentUser;
+    });
+    syncInFlightRef.current = { token, promise };
+    try {
+      return await promise;
+    } finally {
+      if (syncInFlightRef.current?.promise === promise) syncInFlightRef.current = null;
+    }
+  }, [updateUser]);
 
   useEffect(() => {
     let active = true;
@@ -38,7 +68,8 @@ export function AuthProvider({ children }) {
       } catch {
         if (active) {
           setAccessToken(null);
-          setUser(null);
+          synchronizedTokenRef.current = null;
+          updateUser(null);
         }
       } finally {
         if (active) setLoading(false);
@@ -51,20 +82,34 @@ export function AuthProvider({ children }) {
     });
 
     return () => { active = false; subscription.unsubscribe(); };
-  }, [loadDomainUser]);
+  }, [loadDomainUser, updateUser]);
 
   const login = useCallback(async (credentials) => {
     const session = await signInWithEmail(credentials);
-    return loadDomainUser(session);
-  }, [loadDomainUser]);
+    try {
+      return await loadDomainUser(session);
+    } catch (error) {
+      await signOut().catch(() => {});
+      setAccessToken(null);
+      synchronizedTokenRef.current = null;
+      updateUser(null);
+      throw error;
+    }
+  }, [loadDomainUser, updateUser]);
 
   const register = useCallback(async (payload) => {
     return signUpWithEmail(payload);
   }, []);
 
   const logout = useCallback(async () => {
-    try { await signOut(); } finally { setAccessToken(null); setUser(null); }
-  }, []);
+    try {
+      await signOut();
+    } finally {
+      setAccessToken(null);
+      synchronizedTokenRef.current = null;
+      updateUser(null);
+    }
+  }, [updateUser]);
 
   const refreshUser = useCallback(async () => {
     const { data } = await supabase.auth.getSession();
@@ -73,7 +118,7 @@ export function AuthProvider({ children }) {
 
   const value = {
     user,
-    setUser,
+    setUser: updateUser,
     loading,
     isAuthenticated: !!user,
     hasRole: (role) => !!user && (user.role === role || (user.roles || []).includes(role)),
