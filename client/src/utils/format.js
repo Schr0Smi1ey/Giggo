@@ -4,7 +4,11 @@
 export function fileUrl(url) {
   if (!url) return '';
   if (/^https?:\/\//i.test(url)) return url;
-  return url; // relative /api/files/... is served via the dev proxy / same origin
+  const apiBaseUrl = import.meta.env.VITE_API_URL || '/api';
+  if (url.startsWith('/api/') && /^https?:\/\//i.test(apiBaseUrl)) {
+    return `${apiBaseUrl.replace(/\/api\/?$/i, '')}${url}`;
+  }
+  return url; // relative /api/... is served via the Vite proxy or same origin
 }
 
 /** Initials for avatar fallback. */
