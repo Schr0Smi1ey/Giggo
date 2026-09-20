@@ -57,6 +57,9 @@ export async function completeAuthRedirect() {
   const code = new URLSearchParams(window.location.search).get('code');
   if (code) {
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+    if (error && /code verifier/i.test(error.message || '')) {
+      throw new Error('This link was created with the previous same-browser sign-in flow. Your email may already be verified: try logging in. If it is not, request a new verification link.');
+    }
     throwIfError(error);
     return data.session;
   }

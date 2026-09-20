@@ -9,7 +9,9 @@ if (!url || !publishableKey) {
 
 export const supabase = createClient(url, publishableKey, {
   auth: {
-    flowType: 'pkce',
-    detectSessionInUrl: false,
+    // Giggo is a client-only Vite SPA. The implicit flow lets confirmation and
+    // recovery links work even when users open email in another browser/device.
+    flowType: 'implicit',
+    detectSessionInUrl: true,
   },
 });

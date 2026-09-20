@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useMyProfile } from '../services/profile.js';
-import { CheckCircle2, Circle, ArrowRight, Search } from 'lucide-react';
+import { CheckCircle2, Circle, ArrowRight, Briefcase, Search } from 'lucide-react';
 
 const cards = {
   freelancer: [
@@ -90,7 +90,15 @@ export default function Dashboard() {
       </div>
 
       {isClient && (
-        <div className="mt-6">
+        <div className="mt-6 grid gap-4 lg:grid-cols-2">
+          <Link to="/dashboard/jobs/new" className="group flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-brand-300 hover:shadow-md">
+            <div className="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-brand-50 text-brand-700"><Briefcase className="h-5 w-5" /></div>
+            <div className="min-w-0">
+              <div className="font-semibold text-slate-900">Post a job</div>
+              <div className="text-sm text-slate-500">Create a project and start finding the right freelancer.</div>
+            </div>
+            <ArrowRight className="ml-auto h-4 w-4 shrink-0 text-slate-300 transition group-hover:text-brand-600" />
+          </Link>
           <Link to="/find-talent" className="group flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-brand-300 hover:shadow-md">
           <div className="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-brand-50 text-brand-700"><Search className="h-5 w-5" /></div>
           <div className="min-w-0">
