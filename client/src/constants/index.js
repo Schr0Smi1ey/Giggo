@@ -99,3 +99,24 @@ export const PROPOSAL_TONE_OPTIONS = [
   { value: 'friendly', label: 'Friendly' },
   { value: 'concise', label: 'Concise' },
 ];
+
+export const OFFER_STATUS_OPTIONS = [
+  { value: 'draft', label: 'Draft' },
+  { value: 'sent', label: 'Awaiting response' },
+  { value: 'changes_requested', label: 'Changes requested' },
+  { value: 'revising', label: 'Revision in progress' },
+  { value: 'accepted', label: 'Accepted' },
+  { value: 'rejected', label: 'Declined' },
+  { value: 'withdrawn', label: 'Withdrawn' },
+];
+export const OFFER_STATUS_LABELS = Object.fromEntries(OFFER_STATUS_OPTIONS.map((option) => [option.value, option.label]));
+export const OFFER_STATUS_BADGES = {
+  draft: 'bg-slate-100 text-slate-600',
+  sent: 'bg-blue-50 text-blue-700',
+  changes_requested: 'bg-amber-50 text-amber-700',
+  revising: 'bg-violet-50 text-violet-700',
+  accepted: 'bg-emerald-50 text-emerald-700',
+  rejected: 'bg-red-50 text-red-700',
+  withdrawn: 'bg-slate-100 text-slate-500',
+};
+export const ACTIVE_OFFER_STATUSES = ['draft', 'sent', 'changes_requested', 'revising'];

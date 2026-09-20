@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { ArrowLeft, Clock, ListChecks, Pencil, RotateCcw, Sparkles, Star, ThumbsDown, Undo2 } from 'lucide-react';
+import { ArrowLeft, Clock, Handshake, ListChecks, Pencil, RotateCcw, Sparkles, Star, ThumbsDown, Undo2 } from 'lucide-react';
 import { apiErrorMessage } from '../api/client.js';
 import { Button } from '../components/Button.jsx';
 import { Skeleton } from '../components/Loaders.jsx';
 import { Textarea } from '../components/Textarea.jsx';
 import {
   ACTIVE_PROPOSAL_STATUSES,
+  ACTIVE_OFFER_STATUSES,
+  OFFER_STATUS_LABELS,
   PROPOSAL_STATUS_BADGES,
   PROPOSAL_STATUS_LABELS,
 } from '../constants/index.js';
@@ -33,6 +35,8 @@ export default function ProposalDetail() {
   const isAuthor = String(idOf(proposal.freelancer)) === String(idOf(user));
   const isClient = String(proposal.client) === String(idOf(user));
   const active = ACTIVE_PROPOSAL_STATUSES.includes(proposal.status);
+  const activeOffer = proposal.offer && ACTIVE_OFFER_STATUSES.includes(proposal.offer.status);
+  const canCreateOffer = proposal.status === 'shortlisted' && (!proposal.offer || ['rejected', 'withdrawn'].includes(proposal.offer.status));
   const jobId = idOf(proposal.job);
   const reviewNote = note || proposal.reviewNote || '';
 
@@ -90,16 +94,18 @@ export default function ProposalDetail() {
           </div>
         )}
 
-        {isClient && !['withdrawn', 'accepted'].includes(proposal.status) && (
+        {isClient && !['withdrawn', 'accepted'].includes(proposal.status) && !activeOffer && (
           <div className="mt-6 border-t border-slate-100 pt-5">
             <Textarea label="Note for the freelancer (optional)" name="reviewNote" rows={3} value={reviewNote} onChange={(event) => setNote(event.target.value)} maxLength={1000} />
             <div className="mt-3 flex flex-wrap gap-2">
               {proposal.status !== 'shortlisted' && <Button size="sm" loading={decide.isPending} onClick={() => onDecision('shortlist')}><Star className="h-4 w-4" /> Shortlist</Button>}
               {proposal.status !== 'rejected' && <Button size="sm" variant="secondary" loading={decide.isPending} onClick={() => onDecision('reject')}><ThumbsDown className="h-4 w-4" /> Not a fit</Button>}
               {['shortlisted', 'rejected'].includes(proposal.status) && <Button size="sm" variant="ghost" loading={decide.isPending} onClick={() => onDecision('reconsider')}><RotateCcw className="h-4 w-4" /> Reconsider</Button>}
+              {canCreateOffer && <Link to={`/dashboard/proposals/${id}/offer/new`}><Button size="sm"><Handshake className="h-4 w-4" /> {proposal.offer ? 'Create another offer' : 'Create offer'}</Button></Link>}
             </div>
           </div>
         )}
+        {isClient && activeOffer && <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-5 text-sm text-slate-600"><span>Offer: <strong>{OFFER_STATUS_LABELS[proposal.offer.status] || proposal.offer.status}</strong></span><Link to="/dashboard/offers" className="font-medium text-brand-700 hover:underline">Manage offer</Link></div>}
       </div>
     </div>
   );

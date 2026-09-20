@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { ChevronDown, ChevronUp, Clock, Eye, Inbox, ListChecks, RotateCcw, Sparkles, Star, ThumbsDown, X } from 'lucide-react';
+import { ChevronDown, ChevronUp, Clock, Eye, Handshake, Inbox, ListChecks, RotateCcw, Sparkles, Star, ThumbsDown, X } from 'lucide-react';
 import { apiErrorMessage } from '../api/client.js';
 import { Button } from '../components/Button.jsx';
 import { Skeleton } from '../components/Loaders.jsx';
@@ -13,6 +13,8 @@ import {
   PROPOSAL_STATUS_BADGES,
   PROPOSAL_STATUS_LABELS,
   PROPOSAL_STATUS_OPTIONS,
+  ACTIVE_OFFER_STATUSES,
+  OFFER_STATUS_LABELS,
 } from '../constants/index.js';
 import { useJob } from '../services/jobs.js';
 import { useDecideProposal, useProposal, useReceivedProposals } from '../services/proposals.js';
@@ -116,7 +118,9 @@ function ReceivedProposalCard({ proposal, showJob, onDecide, busy }) {
   const item = detail || proposal;
   const freelancer = item.freelancer || {};
   const profile = item.freelancerProfile || {};
-  const decidable = !['withdrawn', 'accepted'].includes(item.status);
+  const activeOffer = item.offer && ACTIVE_OFFER_STATUSES.includes(item.offer.status);
+  const canCreateOffer = item.status === 'shortlisted' && (!item.offer || ['rejected', 'withdrawn'].includes(item.offer.status));
+  const decidable = !['withdrawn', 'accepted'].includes(item.status) && !activeOffer;
 
   return (
     <li className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -162,10 +166,12 @@ function ReceivedProposalCard({ proposal, showJob, onDecide, busy }) {
             {item.status !== 'shortlisted' && <Button size="sm" loading={busy} onClick={() => onDecide(id, 'shortlist', note)}><Star className="h-4 w-4" /> Shortlist</Button>}
             {item.status !== 'rejected' && <Button size="sm" variant="secondary" loading={busy} onClick={() => onDecide(id, 'reject', note)}><ThumbsDown className="h-4 w-4" /> Not a fit</Button>}
             {['shortlisted', 'rejected'].includes(item.status) && <Button size="sm" variant="ghost" loading={busy} onClick={() => onDecide(id, 'reconsider', note)}><RotateCcw className="h-4 w-4" /> Reconsider</Button>}
+            {canCreateOffer && <Link to={`/dashboard/proposals/${id}/offer/new`}><Button size="sm"><Handshake className="h-4 w-4" /> {item.offer ? 'Create another offer' : 'Create offer'}</Button></Link>}
           </div>
           <p className="mt-2 text-xs text-slate-400">Shortlisting is not hiring. Offers and contracts are handled separately.</p>
         </div>
-      ) : <p className="mt-4 border-t border-slate-100 pt-4 text-sm text-slate-500">{item.status === 'withdrawn' ? 'The freelancer withdrew this proposal.' : 'This proposal is already tied to a hiring decision.'}</p>}
+      ) : activeOffer ? <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-4 text-sm text-slate-600"><span>Offer: <strong>{OFFER_STATUS_LABELS[item.offer.status] || item.offer.status}</strong></span><Link to="/dashboard/offers" className="font-medium text-brand-700 hover:underline">Manage offer</Link></div>
+        : <p className="mt-4 border-t border-slate-100 pt-4 text-sm text-slate-500">{item.status === 'withdrawn' ? 'The freelancer withdrew this proposal.' : 'This proposal is already tied to a hiring decision.'}</p>}
     </li>
   );
 }

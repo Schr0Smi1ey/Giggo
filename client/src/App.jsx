@@ -26,6 +26,9 @@ const SubmitProposal = lazy(() => import('./pages/SubmitProposal.jsx'));
 const MyProposals = lazy(() => import('./pages/MyProposals.jsx'));
 const ProposalsReceived = lazy(() => import('./pages/ProposalsReceived.jsx'));
 const ProposalDetail = lazy(() => import('./pages/ProposalDetail.jsx'));
+const OfferForm = lazy(() => import('./pages/OfferForm.jsx'));
+const MyOffers = lazy(() => import('./pages/MyOffers.jsx'));
+const OfferDetail = lazy(() => import('./pages/OfferDetail.jsx'));
 const PostJob = lazy(() => import('./pages/PostJob.jsx'));
 const MyJobs = lazy(() => import('./pages/MyJobs.jsx'));
 const SavedJobs = lazy(() => import('./pages/SavedJobs.jsx'));
@@ -98,8 +101,12 @@ export default function App() {
             <Route path="jobs/:id/edit" element={<ProtectedRoute roles={['client']}><PostJob /></ProtectedRoute>} />
             <Route path="proposals" element={<ProtectedRoute roles={['freelancer']}><MyProposals /></ProtectedRoute>} />
             <Route path="proposals/received" element={<ProtectedRoute roles={['client']}><ProposalsReceived /></ProtectedRoute>} />
+            <Route path="proposals/:proposalId/offer/new" element={<ProtectedRoute roles={['client']}><OfferForm /></ProtectedRoute>} />
             <Route path="proposals/:id/edit" element={<ProtectedRoute roles={['freelancer']}><SubmitProposal mode="edit" /></ProtectedRoute>} />
             <Route path="proposals/:id" element={<ProposalDetail />} />
+            <Route path="offers" element={<ProtectedRoute roles={['client', 'freelancer']}><MyOffers /></ProtectedRoute>} />
+            <Route path="offers/:id" element={<ProtectedRoute roles={['client', 'freelancer']}><OfferDetail /></ProtectedRoute>} />
+            <Route path="offers/:id/edit" element={<ProtectedRoute roles={['client']}><OfferForm mode="edit" /></ProtectedRoute>} />
             <Route path="saved-jobs" element={<ProtectedRoute roles={['freelancer']}><SavedJobs /></ProtectedRoute>} />
             <Route path="cv-analysis" element={<ProtectedRoute roles={['freelancer']}><CvAnalysis /></ProtectedRoute>} />
             <Route path="verification" element={<ProtectedRoute roles={['freelancer']}><Verification /></ProtectedRoute>} />

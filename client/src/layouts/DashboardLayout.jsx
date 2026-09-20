@@ -1,5 +1,5 @@
 import { Outlet, NavLink, Link } from 'react-router-dom';
-import { Briefcase, Bookmark, FileText, Inbox, LayoutDashboard, User, Settings, ShieldCheck, Sparkles } from 'lucide-react';
+import { Briefcase, Bookmark, FileText, Handshake, Inbox, LayoutDashboard, User, Settings, ShieldCheck, Sparkles } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
 
 const items = [
@@ -14,6 +14,7 @@ const adminItems = [
 
 const freelancerItems = [
   { to: '/dashboard/proposals', label: 'My proposals', icon: FileText },
+  { to: '/dashboard/offers', label: 'My offers', icon: Handshake },
   { to: '/dashboard/cv-analysis', label: 'CV Analyzer', icon: Sparkles },
   { to: '/dashboard/saved-jobs', label: 'Saved jobs', icon: Bookmark },
   { to: '/dashboard/verification', label: 'Verification', icon: ShieldCheck },
@@ -22,6 +23,7 @@ const freelancerItems = [
 const clientItems = [
   { to: '/dashboard/jobs', label: 'My jobs', icon: Briefcase },
   { to: '/dashboard/proposals/received', label: 'Proposals received', icon: Inbox },
+  { to: '/dashboard/offers', label: 'Offers sent', icon: Handshake },
 ];
 
 export function DashboardLayout() {
