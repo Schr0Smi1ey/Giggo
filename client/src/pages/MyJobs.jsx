@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, Briefcase, Bookmark } from 'lucide-react';
+import { Plus, Briefcase, Bookmark, Users } from 'lucide-react';
 import { useMyJobs } from '../services/jobs.js';
 import { formatBudget, timeAgo } from '../utils/format.js';
 import { JOB_STATUS_LABELS } from '../constants/index.js';
@@ -79,9 +79,14 @@ export default function MyJobs() {
                     <span>{timeAgo(job.createdAt)}</span>
                   </div>
                 </div>
-                <Link to={`/dashboard/jobs/${job._id || job.id}/edit`}>
-                  <Button variant="secondary" size="sm">Edit</Button>
-                </Link>
+                <div className="flex shrink-0 flex-wrap gap-2">
+                  <Link to={`/dashboard/proposals/received?job=${job._id || job.id}`}>
+                    <Button variant="secondary" size="sm"><Users className="h-4 w-4" /> Proposals</Button>
+                  </Link>
+                  <Link to={`/dashboard/jobs/${job._id || job.id}/edit`}>
+                    <Button variant="secondary" size="sm">Edit</Button>
+                  </Link>
+                </div>
               </div>
             </li>
           ))}

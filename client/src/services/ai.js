@@ -51,4 +51,8 @@ export function useApplySkills() {
   });
 }
 
+export function useDraftProposal() {
+  return useMutation({ mutationFn: aiApi.draftProposal });
+}
+
 export { KEYS as aiKeys };

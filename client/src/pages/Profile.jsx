@@ -248,7 +248,13 @@ function FreelancerProfile() {
           {form.visibility === 'public' ? <Globe className="h-5 w-5 text-emerald-600" /> : <Lock className="h-5 w-5 text-slate-400" />}
           <div>
             <h2 className="font-semibold text-slate-900">Profile visibility</h2>
-            <p className="text-sm text-slate-500">{form.visibility === 'public' ? 'Your profile appears in the talent directory.' : 'Only you can see your profile.'}</p>
+            <p className="text-sm text-slate-500">
+              {form.visibility === 'public'
+                ? profile.onboardingCompleted
+                  ? 'Your profile appears in the talent directory and is available by direct link.'
+                  : 'Your profile is available by direct link. Complete onboarding to appear in the talent directory.'
+                : 'Only you can see your profile.'}
+            </p>
           </div>
         </div>
         <Select

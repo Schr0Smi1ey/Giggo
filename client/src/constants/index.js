@@ -71,3 +71,31 @@ export const JOB_SORTS = [
 export const EXPERIENCE_LEVEL_LABELS = Object.fromEntries(EXPERIENCE_LEVEL_OPTIONS.map((o) => [o.value, o.label]));
 export const JOB_DURATION_LABELS = Object.fromEntries(JOB_DURATION_OPTIONS.map((o) => [o.value, o.label]));
 export const JOB_STATUS_LABELS = Object.fromEntries(JOB_STATUS_OPTIONS.map((o) => [o.value, o.label]));
+
+export const PROPOSAL_STATUS_OPTIONS = [
+  { value: 'submitted', label: 'Submitted' },
+  { value: 'shortlisted', label: 'Shortlisted' },
+  { value: 'rejected', label: 'Not selected' },
+  { value: 'withdrawn', label: 'Withdrawn' },
+  { value: 'accepted', label: 'Accepted' },
+];
+
+export const PROPOSAL_STATUS_LABELS = Object.fromEntries(PROPOSAL_STATUS_OPTIONS.map((option) => [option.value, option.label]));
+export const PROPOSAL_STATUS_BADGES = {
+  submitted: 'bg-blue-50 text-blue-700',
+  shortlisted: 'bg-amber-50 text-amber-700',
+  rejected: 'bg-red-50 text-red-700',
+  withdrawn: 'bg-slate-100 text-slate-600',
+  accepted: 'bg-emerald-50 text-emerald-700',
+};
+export const ACTIVE_PROPOSAL_STATUSES = ['submitted', 'shortlisted'];
+export const PROPOSAL_SORTS = [
+  { value: 'recent', label: 'Most recent' },
+  { value: 'bid_asc', label: 'Bid: low to high' },
+  { value: 'bid_desc', label: 'Bid: high to low' },
+];
+export const PROPOSAL_TONE_OPTIONS = [
+  { value: 'professional', label: 'Professional' },
+  { value: 'friendly', label: 'Friendly' },
+  { value: 'concise', label: 'Concise' },
+];

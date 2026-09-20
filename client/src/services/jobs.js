@@ -3,14 +3,14 @@ import { jobsApi } from '../api/jobs.js';
 
 const KEYS = {
   all: ['jobs'],
-  list: (params) => ['jobs', 'list', params],
+  list: (params, viewerKey = 'public') => ['jobs', 'list', params, viewerKey],
   detail: (id) => ['jobs', 'detail', id],
   mine: (params) => ['jobs', 'mine', params],
   saved: (params) => ['jobs', 'saved', params],
 };
 
-export function useJobs(params = {}, options = {}) {
-  return useQuery({ queryKey: KEYS.list(params), queryFn: () => jobsApi.list(params), ...options });
+export function useJobs(params = {}, options = {}, viewerKey = 'public') {
+  return useQuery({ queryKey: KEYS.list(params, viewerKey), queryFn: () => jobsApi.list(params), ...options });
 }
 
 export function useJob(id, options = {}) {
