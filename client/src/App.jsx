@@ -16,6 +16,8 @@ import NotFound from './pages/NotFound.jsx';
 // Lazy-loaded pages (code splitting).
 const Dashboard = lazy(() => import('./pages/Dashboard.jsx'));
 const Settings = lazy(() => import('./pages/Settings.jsx'));
+const Messages = lazy(() => import('./pages/Messages.jsx'));
+const Notifications = lazy(() => import('./pages/Notifications.jsx'));
 const Profile = lazy(() => import('./pages/Profile.jsx'));
 const Onboarding = lazy(() => import('./pages/Onboarding.jsx'));
 const FindTalent = lazy(() => import('./pages/FindTalent.jsx'));
@@ -118,7 +120,8 @@ export default function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="messages" element={<Placeholder title="Messages" phase="Phase 7" />} />
+            <Route path="messages" element={<Messages />} />
+            <Route path="notifications" element={<Notifications />} />
             <Route path="settings" element={<Settings />} />
           </Route>
 

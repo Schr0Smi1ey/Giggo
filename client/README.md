@@ -33,11 +33,15 @@ AI-generated CV feedback is advisory only. Human review remains authoritative fo
 
 ## Current Repository Status
 
-**Status: complete multi-page frontend imported and rebranded as Giggo.**
+**Status: active data-backed marketplace implementation.**
 
-The repository now contains a Vite, React, and Tailwind CSS client with its original page and route structure preserved. The homepage, authentication screens, public marketplace pages, profile flows, dashboards, settings, verification screens, job management screens, CV analysis interface, and placeholder routes are present.
+The repository contains a Vite, React, and Tailwind CSS client for authentication,
+profiles, verification, jobs, proposals, offers, CV analysis, private/group
+messaging, live presence and typing, and persisted notifications.
 
-The copied frontend expects API and Socket.IO services at `http://localhost:5000` through the Vite development proxy. Those backend services are not part of this repository, so authentication and data-backed actions require a compatible server before they can function.
+The frontend expects the separate Giggo backend API and Socket.IO service at
+`http://localhost:5000` through the Vite development proxy. Both repositories
+must be running for authenticated and data-backed journeys.
 
 ## Local Development
 

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   ArrowLeft,
   CheckCircle2,
@@ -15,11 +16,13 @@ import {
 import { Link, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { apiErrorMessage } from '../api/client.js';
+import { messagesApi } from '../api/messages.js';
 import { Button } from '../components/Button.jsx';
 import { Skeleton } from '../components/Loaders.jsx';
 import { Textarea } from '../components/Textarea.jsx';
 import { OFFER_STATUS_BADGES, OFFER_STATUS_LABELS } from '../constants/index.js';
 import { useAuth } from '../context/AuthContext.jsx';
+import { useSocket } from '../context/SocketContext.jsx';
 import {
   useAcceptOffer,
   useOffer,
@@ -84,6 +87,8 @@ function RevisionCard({ revision, previous, accepted }) {
 export default function OfferDetail() {
   const { id } = useParams();
   const { user } = useAuth();
+  const { socket, joinConversation } = useSocket();
+  const queryClient = useQueryClient();
   const { data: offer, isLoading, isError, refetch } = useOffer(id, {
     refetchInterval: 2000,
     refetchIntervalInBackground: false,
@@ -110,6 +115,20 @@ export default function OfferDetail() {
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     conversationEndRef.current?.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'nearest' });
   }, [offer?.messages?.length]);
+
+  useEffect(() => {
+    if (!socket || !offer?.conversationId) return undefined;
+    void joinConversation(offer.conversationId);
+    return () => socket.emit('conversation:leave', { conversationId: offer.conversationId });
+  }, [joinConversation, offer?.conversationId, socket]);
+
+  useEffect(() => {
+    if (!offer?.conversationId || !offer?.messages?.length) return;
+    void messagesApi.markRead(offer.conversationId).then(() => Promise.all([
+      queryClient.invalidateQueries({ queryKey: ['conversations'] }),
+      queryClient.invalidateQueries({ queryKey: ['notifications'] }),
+    ])).catch(() => {});
+  }, [offer?.conversationId, offer?.messages?.length, queryClient]);
 
   const run = (mutation, variables, success) => mutation.mutate(variables, {
     onSuccess: () => { toast.success(success); setShowChangeRequest(false); setChangeRequest(''); },
@@ -188,7 +207,7 @@ export default function OfferDetail() {
               {(offer.messages || []).length === 0 ? <p className="py-10 text-center text-sm text-slate-500">No conversation yet.</p> : offer.messages.map((item) => {
                 const mine = idOf(item.sender) === idOf(user);
                 if (item.kind === 'system') return <div key={idOf(item)} className="flex justify-center"><p className="rounded-full bg-slate-100 px-3 py-1.5 text-center text-xs text-slate-500">{item.body} · {timeAgo(item.createdAt)}</p></div>;
-                return <div key={idOf(item)} className={`flex ${mine ? 'justify-end' : 'justify-start'}`}><div className={`max-w-[88%] rounded-xl px-3 py-2 ${item.kind === 'change_request' ? 'border border-amber-200 bg-amber-50 text-amber-900' : mine ? 'bg-brand-600 text-white' : 'bg-slate-100 text-slate-700'} ${item.pending ? 'opacity-70' : ''}`}><p className="text-xs font-medium opacity-75">{item.kind === 'change_request' ? `Change request for revision ${item.revision}` : item.sender?.name || item.senderRole}</p><p className="mt-1 whitespace-pre-wrap break-words text-sm">{item.body}</p><p className="mt-1 text-[11px] opacity-60">{item.pending ? 'Sending…' : timeAgo(item.createdAt)}</p></div></div>;
+                return <div key={idOf(item)} className={`flex ${mine ? 'justify-end' : 'justify-start'}`}><div className={`max-w-[88%] rounded-xl px-3 py-2 ${item.kind === 'change_request' ? 'border border-amber-200 bg-amber-50 text-amber-900' : mine ? 'bg-brand-600 text-white' : 'bg-slate-100 text-slate-700'} ${item.pending ? 'opacity-70' : ''}`}><p className="text-xs font-medium opacity-75">{item.kind === 'change_request' ? `Change request for revision ${item.revision}` : item.sender?.name || item.senderRole || 'Deleted user'}</p><p className={`mt-1 whitespace-pre-wrap break-words text-sm ${item.deletedAt ? 'italic opacity-60' : ''}`}>{item.deletedAt ? 'This message was deleted.' : item.body}</p><p className="mt-1 text-[11px] opacity-60">{item.pending ? 'Sending…' : `${timeAgo(item.createdAt)}${item.editedAt ? ' · edited' : ''}`}</p></div></div>;
               })}
               <div ref={conversationEndRef} />
             </div>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
@@ -8,15 +9,37 @@ import { useAuth } from '../context/AuthContext.jsx';
 import { api, apiErrorMessage } from '../api/client.js';
 import { Input } from '../components/Input.jsx';
 import { Button } from '../components/Button.jsx';
+import { notificationsApi } from '../api/notifications.js';
+
+const NOTIFICATION_LABELS = {
+  messages: 'New messages',
+  proposals: 'Proposal activity',
+  offers: 'Offer activity',
+  contracts: 'Contract activity',
+  payments: 'Payment activity',
+  disputes: 'Dispute activity',
+  verification: 'Verification decisions',
+  system: 'Important system updates',
+};
 
 export default function Settings() {
   const { logout, reauthenticate, updatePassword } = useAuth();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [deletePassword, setDeletePassword] = useState('');
   const [deleteConfirmation, setDeleteConfirmation] = useState('');
   const [deleting, setDeleting] = useState(false);
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(changePasswordSchema),
+  });
+  const { data: notificationPreferences } = useQuery({ queryKey: ['notification-preferences'], queryFn: notificationsApi.preferences });
+  const saveNotificationPreferences = useMutation({
+    mutationFn: notificationsApi.updatePreferences,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['notification-preferences'] });
+      toast.success('Notification preferences saved');
+    },
+    onError: (error) => toast.error(apiErrorMessage(error, 'Could not save notification preferences')),
   });
 
   const onChangePassword = async (values) => {
@@ -103,6 +126,28 @@ export default function Settings() {
           >
             Permanently delete account
           </Button>
+        </div>
+      </section>
+
+      <section className="mt-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+        <h2 className="font-semibold text-slate-900">In-app notifications</h2>
+        <p className="mt-1 text-sm text-slate-500">Choose which non-critical updates appear in your notification center.</p>
+        <div className="mt-4 space-y-3">
+          {Object.entries(NOTIFICATION_LABELS).map(([category, label]) => (
+            <label key={category} className="flex items-center justify-between gap-4 rounded-lg border border-slate-100 p-3 text-sm text-slate-700">
+              <span>{label}</span>
+              <input
+                type="checkbox"
+                className="h-4 w-4 rounded border-slate-300 text-brand-600"
+                checked={notificationPreferences?.inApp?.[category] !== false}
+                onChange={(event) => saveNotificationPreferences.mutate({
+                  ...Object.fromEntries(Object.keys(NOTIFICATION_LABELS).map((key) => [key, notificationPreferences?.inApp?.[key] !== false])),
+                  [category]: event.target.checked,
+                })}
+                disabled={saveNotificationPreferences.isPending}
+              />
+            </label>
+          ))}
         </div>
       </section>
     </div>
