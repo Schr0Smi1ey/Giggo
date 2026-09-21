@@ -21,7 +21,7 @@ The proposed course MVP includes:
 - Freelancer profiles with experience, skills, portfolios, CVs, and availability.
 - Human-reviewed verification requests and visible trust signals.
 - Job posting, browsing, search, filtering, saved jobs, and job details.
-- Proposal submission, shortlisting, acceptance or rejection, and basic contract tracking.
+- Proposal submission, shortlisting, acceptance or rejection, contract tracking, and participant project workspaces.
 - Direct participant messaging and role-specific dashboards.
 - Advisory CV analysis through a replaceable AI provider with a deterministic development fallback.
 
@@ -37,7 +37,7 @@ AI-generated CV feedback is advisory only. Human review remains authoritative fo
 
 The repository contains a Vite, React, and Tailwind CSS client for authentication,
 profiles, verification, jobs, proposals, offers, accepted-term contracts,
-contract lifecycle tracking, CV analysis, private/group messaging, live
+contract lifecycle tracking, project progress workspaces, CV analysis, private/group messaging, live
 presence and typing, and persisted notifications.
 
 The frontend expects the separate Giggo backend API and Socket.IO service at
