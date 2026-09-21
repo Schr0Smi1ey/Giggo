@@ -23,6 +23,7 @@ function useOfferMutation(mutationFn) {
       queryClient.invalidateQueries({ queryKey: KEYS.all });
       queryClient.invalidateQueries({ queryKey: ['proposals'] });
       queryClient.invalidateQueries({ queryKey: ['jobs'] });
+      queryClient.invalidateQueries({ queryKey: ['contracts'] });
       const offerId = offer?._id || offer?.id;
       if (offerId) queryClient.setQueryData(KEYS.detail(offerId), offer);
     },

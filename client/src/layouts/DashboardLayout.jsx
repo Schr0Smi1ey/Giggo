@@ -1,6 +1,6 @@
 import { Outlet, NavLink, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Bell, Briefcase, Bookmark, FileText, Handshake, Inbox, LayoutDashboard, MessageCircle, User, Settings, ShieldCheck, Sparkles } from 'lucide-react';
+import { Bell, Briefcase, Bookmark, FileSignature, FileText, Handshake, Inbox, LayoutDashboard, MessageCircle, User, Settings, ShieldCheck, Sparkles } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { notificationsApi } from '../api/notifications.js';
 
@@ -35,6 +35,7 @@ export function DashboardLayout() {
   const { data: notifications } = useQuery({ queryKey: ['notifications'], queryFn: () => notificationsApi.list({ limit: 5 }), refetchInterval: 30_000 });
   const nav = [
     ...items,
+    ...((hasRole('client') || hasRole('freelancer')) ? [{ to: '/dashboard/contracts', label: 'Contracts', icon: FileSignature }] : []),
     ...(hasRole('client') ? clientItems : []),
     ...(hasRole('freelancer') ? freelancerItems : []),
     ...(hasRole('admin') ? adminItems : []),

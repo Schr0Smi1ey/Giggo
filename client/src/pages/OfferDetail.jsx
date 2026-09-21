@@ -5,6 +5,7 @@ import {
   CheckCircle2,
   Clock3,
   FileClock,
+  FileSignature,
   MessageSquare,
   Pencil,
   RefreshCw,
@@ -187,6 +188,7 @@ export default function OfferDetail() {
           {isClient && ['draft', 'sent', 'changes_requested', 'revising'].includes(offer.status) && <Link to={`/dashboard/offers/${id}/edit`}><Button size="sm"><Pencil className="h-4 w-4" /> Revise terms</Button></Link>}
           {isClient && ['draft', 'sent', 'changes_requested', 'revising'].includes(offer.status) && <Button size="sm" variant="ghost" loading={busy} onClick={() => { if (window.confirm('Withdraw this offer?')) run(withdraw, id, 'Offer withdrawn'); }}><Undo2 className="h-4 w-4" /> Withdraw</Button>}
           {!isClient && offer.status === 'sent' && <><Button size="sm" loading={busy} onClick={() => run(accept, { id, revision: offer.revision }, `Revision ${offer.revision} accepted`)}><CheckCircle2 className="h-4 w-4" /> Accept revision {offer.revision}</Button><Button size="sm" variant="secondary" disabled={busy} onClick={() => setShowChangeRequest(true)}><Clock3 className="h-4 w-4" /> Request changes</Button><Button size="sm" variant="ghost" loading={busy} onClick={() => run(reject, id, 'Offer declined')}><XCircle className="h-4 w-4" /> Decline</Button></>}
+          {offer.status === 'accepted' && offer.contract && <Link to={`/dashboard/contracts/${idOf(offer.contract)}`}><Button size="sm"><FileSignature className="h-4 w-4" /> View contract</Button></Link>}
         </div>
         {showChangeRequest && <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-4"><Textarea label="What should the client change?" rows={3} value={changeRequest} onChange={(event) => setChangeRequest(event.target.value)} maxLength={1000} /><div className="mt-3 flex gap-2"><Button size="sm" loading={busy} onClick={submitChangeRequest}>Send request</Button><Button size="sm" variant="ghost" onClick={() => setShowChangeRequest(false)}>Cancel</Button></div></div>}
       </header>

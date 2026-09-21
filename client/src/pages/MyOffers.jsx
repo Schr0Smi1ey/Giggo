@@ -85,9 +85,10 @@ function OfferCard({ offer, isClient }) {
         {isClient && ['draft', 'sent', 'changes_requested', 'revising'].includes(offer.status) && <Link to={`/dashboard/offers/${id}/edit`}><Button size="sm" variant="secondary"><Pencil className="h-4 w-4" /> Revise</Button></Link>}
         {isClient && ['draft', 'revising'].includes(offer.status) && <Button size="sm" onClick={() => run(send, 'Offer sent')} loading={busy}><Send className="h-4 w-4" /> Send</Button>}
         {isClient && ['draft', 'sent', 'changes_requested', 'revising'].includes(offer.status) && <Button size="sm" variant="ghost" onClick={confirmWithdraw} loading={busy}><Undo2 className="h-4 w-4" /> Withdraw</Button>}
-        {!isClient && offer.status === 'sent' && <><Button size="sm" onClick={() => run(accept, 'Offer accepted. Contract setup is the next step.', { id, revision: offer.revision })} loading={busy}><CheckCircle2 className="h-4 w-4" /> Accept revision {offer.revision}</Button><Button size="sm" variant="secondary" onClick={() => setShowChangeRequest(true)} disabled={busy}><Clock className="h-4 w-4" /> Request changes</Button><Button size="sm" variant="ghost" onClick={() => run(reject, 'Offer declined')} loading={busy}><XCircle className="h-4 w-4" /> Decline</Button></>}
+        {!isClient && offer.status === 'sent' && <><Button size="sm" onClick={() => run(accept, 'Offer accepted and contract activated.', { id, revision: offer.revision })} loading={busy}><CheckCircle2 className="h-4 w-4" /> Accept revision {offer.revision}</Button><Button size="sm" variant="secondary" onClick={() => setShowChangeRequest(true)} disabled={busy}><Clock className="h-4 w-4" /> Request changes</Button><Button size="sm" variant="ghost" onClick={() => run(reject, 'Offer declined')} loading={busy}><XCircle className="h-4 w-4" /> Decline</Button></>}
+        {offer.status === 'accepted' && offer.contract && <Link to={`/dashboard/contracts/${idOf(offer.contract)}`}><Button size="sm"><FileSignature className="h-4 w-4" /> Open contract</Button></Link>}
       </div>
-      {offer.status === 'accepted' && <p className="mt-3 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-800">Offer accepted. Contract creation and the project workspace will be added next.</p>}
+      {offer.status === 'accepted' && <p className="mt-3 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-800">Offer accepted. Its terms are locked into the active contract.</p>}
     </li>
   );
 }

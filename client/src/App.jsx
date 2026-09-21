@@ -31,6 +31,8 @@ const ProposalDetail = lazy(() => import('./pages/ProposalDetail.jsx'));
 const OfferForm = lazy(() => import('./pages/OfferForm.jsx'));
 const MyOffers = lazy(() => import('./pages/MyOffers.jsx'));
 const OfferDetail = lazy(() => import('./pages/OfferDetail.jsx'));
+const MyContracts = lazy(() => import('./pages/MyContracts.jsx'));
+const ContractDetail = lazy(() => import('./pages/ContractDetail.jsx'));
 const PostJob = lazy(() => import('./pages/PostJob.jsx'));
 const MyJobs = lazy(() => import('./pages/MyJobs.jsx'));
 const SavedJobs = lazy(() => import('./pages/SavedJobs.jsx'));
@@ -109,6 +111,8 @@ export default function App() {
             <Route path="offers" element={<ProtectedRoute roles={['client', 'freelancer']}><MyOffers /></ProtectedRoute>} />
             <Route path="offers/:id" element={<ProtectedRoute roles={['client', 'freelancer']}><OfferDetail /></ProtectedRoute>} />
             <Route path="offers/:id/edit" element={<ProtectedRoute roles={['client']}><OfferForm mode="edit" /></ProtectedRoute>} />
+            <Route path="contracts" element={<ProtectedRoute roles={['client', 'freelancer']}><MyContracts /></ProtectedRoute>} />
+            <Route path="contracts/:id" element={<ProtectedRoute roles={['client', 'freelancer']}><ContractDetail /></ProtectedRoute>} />
             <Route path="saved-jobs" element={<ProtectedRoute roles={['freelancer']}><SavedJobs /></ProtectedRoute>} />
             <Route path="cv-analysis" element={<ProtectedRoute roles={['freelancer']}><CvAnalysis /></ProtectedRoute>} />
             <Route path="verification" element={<ProtectedRoute roles={['freelancer']}><Verification /></ProtectedRoute>} />

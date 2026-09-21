@@ -120,3 +120,17 @@ export const OFFER_STATUS_BADGES = {
   withdrawn: 'bg-slate-100 text-slate-500',
 };
 export const ACTIVE_OFFER_STATUSES = ['draft', 'sent', 'changes_requested', 'revising'];
+
+export const CONTRACT_STATUS_OPTIONS = [
+  { value: 'active', label: 'Active' },
+  { value: 'paused', label: 'Paused' },
+  { value: 'completed', label: 'Completed' },
+  { value: 'cancelled', label: 'Cancelled' },
+];
+export const CONTRACT_STATUS_LABELS = Object.fromEntries(CONTRACT_STATUS_OPTIONS.map((option) => [option.value, option.label]));
+export const CONTRACT_STATUS_BADGES = {
+  active: 'bg-emerald-50 text-emerald-700',
+  paused: 'bg-amber-50 text-amber-700',
+  completed: 'bg-blue-50 text-blue-700',
+  cancelled: 'bg-red-50 text-red-700',
+};
