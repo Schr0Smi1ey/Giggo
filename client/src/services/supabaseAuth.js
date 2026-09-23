@@ -27,6 +27,12 @@ export async function signInWithEmail({ email, password }) {
   return data.session;
 }
 
+export async function reauthenticateWithPassword({ email, password }) {
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  throwIfError(error);
+  return data.session;
+}
+
 export async function signOut() {
   const { error } = await supabase.auth.signOut();
   throwIfError(error);

@@ -8,4 +8,5 @@ export const aiApi = {
   getAnalysis: (id) => api.get(`/ai/cv/analyses/${id}`).then((r) => r.data.data.analysis),
   deleteAnalysis: (id) => api.delete(`/ai/cv/analyses/${id}`).then((r) => r.data.data),
   applySkills: (id) => api.post(`/ai/cv/analyses/${id}/apply-skills`).then((r) => r.data.data),
+  draftProposal: (payload) => api.post('/ai/proposal/draft', payload).then((r) => r.data.data.draft),
 };

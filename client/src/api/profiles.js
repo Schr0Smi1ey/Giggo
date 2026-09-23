@@ -17,6 +17,7 @@ export const profilesApi = {
       })
       .then((r) => r.data.data);
   },
+  removeAvatar: () => api.delete('/profiles/me/avatar').then((r) => r.data.data),
 
   uploadCv: (file, onProgress) => {
     const form = new FormData();

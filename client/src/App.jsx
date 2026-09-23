@@ -16,12 +16,25 @@ import NotFound from './pages/NotFound.jsx';
 // Lazy-loaded pages (code splitting).
 const Dashboard = lazy(() => import('./pages/Dashboard.jsx'));
 const Settings = lazy(() => import('./pages/Settings.jsx'));
+const Messages = lazy(() => import('./pages/Messages.jsx'));
+const Notifications = lazy(() => import('./pages/Notifications.jsx'));
 const Profile = lazy(() => import('./pages/Profile.jsx'));
 const Onboarding = lazy(() => import('./pages/Onboarding.jsx'));
 const FindTalent = lazy(() => import('./pages/FindTalent.jsx'));
 const PublicProfile = lazy(() => import('./pages/PublicProfile.jsx'));
 const FindJobs = lazy(() => import('./pages/FindJobs.jsx'));
 const JobDetail = lazy(() => import('./pages/JobDetail.jsx'));
+const SubmitProposal = lazy(() => import('./pages/SubmitProposal.jsx'));
+const MyProposals = lazy(() => import('./pages/MyProposals.jsx'));
+const ProposalsReceived = lazy(() => import('./pages/ProposalsReceived.jsx'));
+const ProposalDetail = lazy(() => import('./pages/ProposalDetail.jsx'));
+const OfferForm = lazy(() => import('./pages/OfferForm.jsx'));
+const MyOffers = lazy(() => import('./pages/MyOffers.jsx'));
+const OfferDetail = lazy(() => import('./pages/OfferDetail.jsx'));
+const MyContracts = lazy(() => import('./pages/MyContracts.jsx'));
+const ContractDetail = lazy(() => import('./pages/ContractDetail.jsx'));
+const MyProjects = lazy(() => import('./pages/MyProjects.jsx'));
+const ProjectDetail = lazy(() => import('./pages/ProjectDetail.jsx'));
 const PostJob = lazy(() => import('./pages/PostJob.jsx'));
 const MyJobs = lazy(() => import('./pages/MyJobs.jsx'));
 const SavedJobs = lazy(() => import('./pages/SavedJobs.jsx'));
@@ -52,6 +65,7 @@ export default function App() {
             <Route path="/freelancers/:userId" element={<PublicProfile />} />
             <Route path="/find-jobs" element={<FindJobs />} />
             <Route path="/jobs/:id" element={<JobDetail />} />
+            <Route path="/jobs/:id/propose" element={<ProtectedRoute roles={['freelancer']}><SubmitProposal /></ProtectedRoute>} />
             <Route path="/services" element={<Placeholder title="Services" phase="Phase 10" />} />
             <Route path="/how-it-works" element={<Placeholder title="How It Works" />} />
             <Route path="/about" element={<Placeholder title="About" />} />
@@ -91,6 +105,18 @@ export default function App() {
             <Route path="jobs" element={<ProtectedRoute roles={['client']}><MyJobs /></ProtectedRoute>} />
             <Route path="jobs/new" element={<ProtectedRoute roles={['client']}><PostJob /></ProtectedRoute>} />
             <Route path="jobs/:id/edit" element={<ProtectedRoute roles={['client']}><PostJob /></ProtectedRoute>} />
+            <Route path="proposals" element={<ProtectedRoute roles={['freelancer']}><MyProposals /></ProtectedRoute>} />
+            <Route path="proposals/received" element={<ProtectedRoute roles={['client']}><ProposalsReceived /></ProtectedRoute>} />
+            <Route path="proposals/:proposalId/offer/new" element={<ProtectedRoute roles={['client']}><OfferForm /></ProtectedRoute>} />
+            <Route path="proposals/:id/edit" element={<ProtectedRoute roles={['freelancer']}><SubmitProposal mode="edit" /></ProtectedRoute>} />
+            <Route path="proposals/:id" element={<ProposalDetail />} />
+            <Route path="offers" element={<ProtectedRoute roles={['client', 'freelancer']}><MyOffers /></ProtectedRoute>} />
+            <Route path="offers/:id" element={<ProtectedRoute roles={['client', 'freelancer']}><OfferDetail /></ProtectedRoute>} />
+            <Route path="offers/:id/edit" element={<ProtectedRoute roles={['client']}><OfferForm mode="edit" /></ProtectedRoute>} />
+            <Route path="contracts" element={<ProtectedRoute roles={['client', 'freelancer']}><MyContracts /></ProtectedRoute>} />
+            <Route path="contracts/:id" element={<ProtectedRoute roles={['client', 'freelancer']}><ContractDetail /></ProtectedRoute>} />
+            <Route path="projects" element={<ProtectedRoute roles={['client', 'freelancer']}><MyProjects /></ProtectedRoute>} />
+            <Route path="projects/:id" element={<ProtectedRoute roles={['client', 'freelancer']}><ProjectDetail /></ProtectedRoute>} />
             <Route path="saved-jobs" element={<ProtectedRoute roles={['freelancer']}><SavedJobs /></ProtectedRoute>} />
             <Route path="cv-analysis" element={<ProtectedRoute roles={['freelancer']}><CvAnalysis /></ProtectedRoute>} />
             <Route path="verification" element={<ProtectedRoute roles={['freelancer']}><Verification /></ProtectedRoute>} />
@@ -102,7 +128,8 @@ export default function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="messages" element={<Placeholder title="Messages" phase="Phase 7" />} />
+            <Route path="messages" element={<Messages />} />
+            <Route path="notifications" element={<Notifications />} />
             <Route path="settings" element={<Settings />} />
           </Route>
 

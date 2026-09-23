@@ -1,7 +1,8 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { ArrowLeft, Clock, TrendingUp, Bookmark, BookmarkCheck, Pencil, Trash2, Briefcase } from 'lucide-react';
+import { ArrowLeft, Clock, TrendingUp, Bookmark, BookmarkCheck, Pencil, Trash2, Briefcase, Users } from 'lucide-react';
 import { useJob, useSaveJob, useUnsaveJob, useDeleteJob, useSavedJobs } from '../services/jobs.js';
+import { useMyProposalForJob } from '../services/proposals.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import { apiErrorMessage } from '../api/client.js';
 import { formatBudget, timeAgo, initials, fileUrl } from '../utils/format.js';
@@ -12,16 +13,20 @@ import { Button } from '../components/Button.jsx';
 export default function JobDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, hasRole } = useAuth();
   const { data: job, isLoading, isError } = useJob(id);
 
   const save = useSaveJob();
   const unsave = useUnsaveJob();
   const del = useDeleteJob();
+  const isFreelancer = hasRole('freelancer');
 
-  // Determine saved state from the caller's saved list (only when logged in).
-  const { data: savedData } = useSavedJobs({ limit: 50 }, { enabled: isAuthenticated });
+  // Saved jobs and proposal state are freelancer-only resources.
+  const { data: savedData } = useSavedJobs({ limit: 50 }, { enabled: isAuthenticated && isFreelancer });
   const isSaved = (savedData?.items || []).some((j) => (j._id || j.id) === id);
+  const { data: existingProposal, isLoading: proposalLoading } = useMyProposalForJob(id, {
+    enabled: isAuthenticated && isFreelancer,
+  });
 
   if (isLoading) {
     return <div className="mx-auto max-w-4xl px-4 py-8 space-y-4"><Skeleton className="h-32" /><Skeleton className="h-64" /></div>;
@@ -91,14 +96,29 @@ export default function JobDetail() {
           {isOwner ? (
             <>
               <Link to={`/dashboard/jobs/${id}/edit`}><Button variant="secondary" size="sm"><Pencil className="h-4 w-4" /> Edit</Button></Link>
+              <Link to={`/dashboard/proposals/received?job=${id}`}><Button variant="secondary" size="sm"><Users className="h-4 w-4" /> View proposals</Button></Link>
               <Button variant="danger" size="sm" onClick={remove} loading={del.isPending}><Trash2 className="h-4 w-4" /> Delete</Button>
             </>
           ) : (
             <>
-              <Button size="sm" onClick={() => (isAuthenticated ? toast('Proposals arrive in Phase 6') : navigate('/login'))}>Apply now</Button>
-              <Button variant="secondary" size="sm" onClick={toggleSave} loading={save.isPending || unsave.isPending}>
-                {isSaved ? <><BookmarkCheck className="h-4 w-4" /> Saved</> : <><Bookmark className="h-4 w-4" /> Save</>}
-              </Button>
+              {!isAuthenticated ? (
+                <Button size="sm" onClick={() => navigate(`/jobs/${id}/propose`)}>Apply now</Button>
+              ) : isFreelancer ? (
+                existingProposal?.status === 'withdrawn' ? (
+                  <Button size="sm" onClick={() => navigate(`/jobs/${id}/propose`)}>Apply again</Button>
+                ) : existingProposal ? (
+                  <Button size="sm" disabled>Proposal {existingProposal.status}</Button>
+                ) : (
+                  <Button size="sm" onClick={() => navigate(`/jobs/${id}/propose`)} loading={proposalLoading}>Apply now</Button>
+                )
+              ) : (
+                <Button size="sm" disabled>Freelancer account required</Button>
+              )}
+              {(!isAuthenticated || isFreelancer) && (
+                <Button variant="secondary" size="sm" onClick={toggleSave} loading={save.isPending || unsave.isPending}>
+                  {isSaved ? <><BookmarkCheck className="h-4 w-4" /> Saved</> : <><Bookmark className="h-4 w-4" /> Save</>}
+                </Button>
+              )}
             </>
           )}
         </div>

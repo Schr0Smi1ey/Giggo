@@ -71,3 +71,66 @@ export const JOB_SORTS = [
 export const EXPERIENCE_LEVEL_LABELS = Object.fromEntries(EXPERIENCE_LEVEL_OPTIONS.map((o) => [o.value, o.label]));
 export const JOB_DURATION_LABELS = Object.fromEntries(JOB_DURATION_OPTIONS.map((o) => [o.value, o.label]));
 export const JOB_STATUS_LABELS = Object.fromEntries(JOB_STATUS_OPTIONS.map((o) => [o.value, o.label]));
+
+export const PROPOSAL_STATUS_OPTIONS = [
+  { value: 'submitted', label: 'Submitted' },
+  { value: 'shortlisted', label: 'Shortlisted' },
+  { value: 'rejected', label: 'Not selected' },
+  { value: 'withdrawn', label: 'Withdrawn' },
+  { value: 'accepted', label: 'Accepted' },
+];
+
+export const PROPOSAL_STATUS_LABELS = Object.fromEntries(PROPOSAL_STATUS_OPTIONS.map((option) => [option.value, option.label]));
+export const PROPOSAL_STATUS_BADGES = {
+  submitted: 'bg-blue-50 text-blue-700',
+  shortlisted: 'bg-amber-50 text-amber-700',
+  rejected: 'bg-red-50 text-red-700',
+  withdrawn: 'bg-slate-100 text-slate-600',
+  accepted: 'bg-emerald-50 text-emerald-700',
+};
+export const ACTIVE_PROPOSAL_STATUSES = ['submitted', 'shortlisted'];
+export const PROPOSAL_SORTS = [
+  { value: 'recent', label: 'Most recent' },
+  { value: 'bid_asc', label: 'Bid: low to high' },
+  { value: 'bid_desc', label: 'Bid: high to low' },
+];
+export const PROPOSAL_TONE_OPTIONS = [
+  { value: 'professional', label: 'Professional' },
+  { value: 'friendly', label: 'Friendly' },
+  { value: 'concise', label: 'Concise' },
+];
+
+export const OFFER_STATUS_OPTIONS = [
+  { value: 'draft', label: 'Draft' },
+  { value: 'sent', label: 'Awaiting response' },
+  { value: 'changes_requested', label: 'Changes requested' },
+  { value: 'revising', label: 'Revision in progress' },
+  { value: 'accepted', label: 'Accepted' },
+  { value: 'rejected', label: 'Declined' },
+  { value: 'withdrawn', label: 'Withdrawn' },
+];
+export const OFFER_STATUS_LABELS = Object.fromEntries(OFFER_STATUS_OPTIONS.map((option) => [option.value, option.label]));
+export const OFFER_STATUS_BADGES = {
+  draft: 'bg-slate-100 text-slate-600',
+  sent: 'bg-blue-50 text-blue-700',
+  changes_requested: 'bg-amber-50 text-amber-700',
+  revising: 'bg-violet-50 text-violet-700',
+  accepted: 'bg-emerald-50 text-emerald-700',
+  rejected: 'bg-red-50 text-red-700',
+  withdrawn: 'bg-slate-100 text-slate-500',
+};
+export const ACTIVE_OFFER_STATUSES = ['draft', 'sent', 'changes_requested', 'revising'];
+
+export const CONTRACT_STATUS_OPTIONS = [
+  { value: 'active', label: 'Active' },
+  { value: 'paused', label: 'Paused' },
+  { value: 'completed', label: 'Completed' },
+  { value: 'cancelled', label: 'Cancelled' },
+];
+export const CONTRACT_STATUS_LABELS = Object.fromEntries(CONTRACT_STATUS_OPTIONS.map((option) => [option.value, option.label]));
+export const CONTRACT_STATUS_BADGES = {
+  active: 'bg-emerald-50 text-emerald-700',
+  paused: 'bg-amber-50 text-amber-700',
+  completed: 'bg-blue-50 text-blue-700',
+  cancelled: 'bg-red-50 text-red-700',
+};

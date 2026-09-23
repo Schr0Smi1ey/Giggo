@@ -3,6 +3,7 @@ import { api, setAccessToken } from '../api/client.js';
 import { supabase } from '../lib/supabase.js';
 import {
   requestPasswordReset,
+  reauthenticateWithPassword,
   resendEmailConfirmation,
   signInWithEmail,
   signOut,
@@ -116,6 +117,12 @@ export function AuthProvider({ children }) {
     return loadDomainUser(data.session);
   }, [loadDomainUser]);
 
+  const reauthenticate = useCallback(async (password) => {
+    if (!currentUserRef.current?.email) throw new Error('No authenticated account is available');
+    const session = await reauthenticateWithPassword({ email: currentUserRef.current.email, password });
+    return loadDomainUser(session);
+  }, [loadDomainUser]);
+
   const value = {
     user,
     setUser: updateUser,
@@ -126,6 +133,7 @@ export function AuthProvider({ children }) {
     register,
     logout,
     refreshUser,
+    reauthenticate,
     resendEmailConfirmation,
     requestPasswordReset,
     updatePassword,

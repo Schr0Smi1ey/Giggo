@@ -9,6 +9,7 @@ import { Select } from '../components/Select.jsx';
 import { Button } from '../components/Button.jsx';
 import { ProfileCompletion } from '../components/ProfileCompletion.jsx';
 import { Skeleton } from '../components/Loaders.jsx';
+import { AvatarUpload } from '../components/AvatarUpload.jsx';
 
 const TEAM_SIZES = [
   { value: '1-10', label: '1–10 people' }, { value: '11-50', label: '11–50 people' },
@@ -54,9 +55,9 @@ export default function ClientProfile() {
     <div className="max-w-3xl pb-16">
       <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="flex items-start gap-4">
-          <div className="grid h-12 w-12 place-items-center rounded-lg bg-brand-50 text-brand-700"><Building2 className="h-6 w-6" /></div>
+          <AvatarUpload size={72} />
           <div className="min-w-0 flex-1">
-            <h1 className="text-xl font-bold text-slate-900">{form.companyName || 'Your company profile'}</h1>
+            <h1 className="flex items-center gap-2 text-xl font-bold text-slate-900"><Building2 className="h-5 w-5 text-brand-700" />{form.companyName || 'Your company profile'}</h1>
             <p className="mt-1 text-sm text-slate-500">Complete company details before posting your first job in a later phase.</p>
             <ProfileCompletion value={profile?.completeness || 0} className="mt-3 max-w-xs" />
           </div>

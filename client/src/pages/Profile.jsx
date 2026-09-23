@@ -14,6 +14,7 @@ import { TagInput } from '../components/TagInput.jsx';
 import { RepeatableList } from '../components/RepeatableList.jsx';
 import { ProfileCompletion } from '../components/ProfileCompletion.jsx';
 import { CvUpload } from '../components/CvUpload.jsx';
+import { AvatarUpload } from '../components/AvatarUpload.jsx';
 import { Skeleton } from '../components/Loaders.jsx';
 import { dateRange } from '../utils/format.js';
 import ClientProfile from './ClientProfile.jsx';
@@ -81,6 +82,7 @@ function FreelancerProfile() {
     <div className="max-w-3xl pb-16">
       {/* Header */}
       <div className="flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:flex-row sm:items-center">
+        <AvatarUpload size={88} />
         <div className="min-w-0 flex-1">
           <h1 className="text-xl font-bold text-slate-900">{user?.name}</h1>
           <p className="truncate text-sm text-slate-500">{form.title || 'Add a professional headline'}</p>
@@ -246,7 +248,13 @@ function FreelancerProfile() {
           {form.visibility === 'public' ? <Globe className="h-5 w-5 text-emerald-600" /> : <Lock className="h-5 w-5 text-slate-400" />}
           <div>
             <h2 className="font-semibold text-slate-900">Profile visibility</h2>
-            <p className="text-sm text-slate-500">{form.visibility === 'public' ? 'Your profile appears in the talent directory.' : 'Only you can see your profile.'}</p>
+            <p className="text-sm text-slate-500">
+              {form.visibility === 'public'
+                ? profile.onboardingCompleted
+                  ? 'Your profile appears in the talent directory and is available by direct link.'
+                  : 'Your profile is available by direct link. Complete onboarding to appear in the talent directory.'
+                : 'Only you can see your profile.'}
+            </p>
           </div>
         </div>
         <Select
