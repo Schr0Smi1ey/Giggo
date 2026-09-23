@@ -37,8 +37,9 @@ AI-generated CV feedback is advisory only. Human review remains authoritative fo
 
 The repository contains a Vite, React, and Tailwind CSS client for authentication,
 profiles, verification, jobs, proposals, offers, accepted-term contracts,
-contract lifecycle tracking, project progress workspaces, CV analysis, private/group messaging, live
-presence and typing, and persisted notifications.
+contract lifecycle tracking, project progress workspaces, milestone delivery
+and revision history, CV analysis, private/group messaging, live presence and
+typing, and persisted notifications.
 
 The frontend expects the separate Giggo backend API and Socket.IO service at
 `http://localhost:5000` through the Vite development proxy. Both repositories

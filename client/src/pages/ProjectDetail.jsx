@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import { apiErrorMessage } from '../api/client.js';
 import { Button } from '../components/Button.jsx';
 import { Skeleton } from '../components/Loaders.jsx';
+import { MilestoneWorkspace } from '../components/MilestoneWorkspace.jsx';
 import { Textarea } from '../components/Textarea.jsx';
 import { CONTRACT_STATUS_BADGES, CONTRACT_STATUS_LABELS } from '../constants/index.js';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -59,6 +60,17 @@ export default function ProjectDetail() {
         <div className="flex flex-wrap items-start justify-between gap-4"><div><div className="flex flex-wrap items-center gap-2"><h1 className="text-2xl font-bold text-slate-900">{contract.title}</h1><span className={`rounded-full px-2 py-1 text-xs font-medium ${CONTRACT_STATUS_BADGES[project.status]}`}>{CONTRACT_STATUS_LABELS[project.status]}</span></div><p className="mt-1 text-sm text-slate-500">{contract.job?.title} · working with {counterpart?.name || 'Marketplace user'}</p></div><div className="flex flex-wrap gap-2">{isFreelancer && project.status === 'active' && project.progress < 99 && <Button size="sm" onClick={() => setShowProgress(true)}><TrendingUp className="h-4 w-4" /> Update progress</Button>}<Link to={`/dashboard/contracts/${idOf(contract)}`} className="inline-flex items-center gap-2 rounded-lg border border-brand-200 bg-white px-3 py-1.5 text-sm font-medium text-brand-700 hover:bg-brand-50 focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"><FileSignature className="h-4 w-4" /> {isClient ? 'Manage contract' : 'View contract'}</Link>{project.conversationId && <Link to={`/dashboard/messages?conversation=${project.conversationId}`} className="inline-flex items-center gap-2 rounded-lg border border-brand-200 bg-white px-3 py-1.5 text-sm font-medium text-brand-700 hover:bg-brand-50 focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"><MessageCircle className="h-4 w-4" /> Open messages</Link>}</div></div>
         {project.status !== 'active' && <p className="mt-4 rounded-lg bg-slate-50 p-3 text-sm text-slate-600">Progress reporting is unavailable while this contract is {project.status}. Contract lifecycle actions remain available from the contract page.</p>}
       </header>
+
+      <div className="mt-6">
+        <MilestoneWorkspace
+          projectId={id}
+          milestones={project.milestones || []}
+          contractStatus={project.status}
+          currency={contract.budget?.currency || 'USD'}
+          isClient={isClient}
+          isFreelancer={isFreelancer}
+        />
+      </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
         <section className="space-y-5" aria-label="Project overview">
