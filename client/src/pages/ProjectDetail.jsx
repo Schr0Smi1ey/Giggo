@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { apiErrorMessage } from '../api/client.js';
 import { Button } from '../components/Button.jsx';
+import { HourlyWorkDiary } from '../components/HourlyWorkDiary.jsx';
 import { Skeleton } from '../components/Loaders.jsx';
 import { MilestoneWorkspace } from '../components/MilestoneWorkspace.jsx';
 import { Textarea } from '../components/Textarea.jsx';
@@ -62,14 +63,18 @@ export default function ProjectDetail() {
       </header>
 
       <div className="mt-6">
-        <MilestoneWorkspace
-          projectId={id}
-          milestones={project.milestones || []}
-          contractStatus={project.status}
-          currency={contract.budget?.currency || 'USD'}
-          isClient={isClient}
-          isFreelancer={isFreelancer}
-        />
+        {contract.budget?.type === 'hourly' ? (
+          <HourlyWorkDiary projectId={id} contractStatus={project.status} isFreelancer={isFreelancer} />
+        ) : (
+          <MilestoneWorkspace
+            projectId={id}
+            milestones={project.milestones || []}
+            contractStatus={project.status}
+            currency={contract.budget?.currency || 'USD'}
+            isClient={isClient}
+            isFreelancer={isFreelancer}
+          />
+        )}
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
