@@ -115,94 +115,78 @@ function ActionLink({ to, variant = 'primary', children, className }) {
 
 function HeroMarketplacePreview() {
   return (
-    <div className="relative mx-auto w-full max-w-[560px] py-10 sm:py-12 lg:py-0">
-      <div className="absolute -inset-6 rounded-[3rem] bg-[radial-gradient(circle_at_55%_38%,rgba(16,185,129,0.20),transparent_42%),radial-gradient(circle_at_30%_78%,rgba(20,184,166,0.12),transparent_38%)] blur-2xl dark:bg-[radial-gradient(circle_at_55%_38%,rgba(45,212,191,0.16),transparent_42%),radial-gradient(circle_at_30%_78%,rgba(34,197,94,0.10),transparent_38%)]" />
+    <div className="relative mx-auto w-full max-w-[570px] py-8 sm:py-10 lg:py-0">
+      <div className="absolute inset-x-10 inset-y-8 rounded-[2.5rem] bg-brand-300/20 blur-3xl dark:bg-brand-500/10" />
 
-      <div className="group relative ml-auto min-h-[430px] rounded-[2rem] bg-white/88 p-6 shadow-2xl shadow-brand-950/12 ring-1 ring-brand-900/5 backdrop-blur transition duration-300 hover:-translate-y-1 hover:shadow-brand-950/18 motion-reduce:transition-none motion-reduce:hover:translate-y-0 dark:bg-slate-900/88 dark:shadow-black/35 dark:ring-white/10 sm:p-7">
-        <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-brand-300 to-transparent dark:via-brand-700" />
-
-        <div className="flex items-start justify-between gap-5">
-          <div>
-            <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-sm font-medium text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-200">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" />
-              Accepting proposals
+      <div className="relative ml-auto overflow-hidden rounded-[1.75rem] border border-white/80 bg-surface/95 p-5 shadow-[0_28px_65px_-30px_rgba(15,23,42,0.42)] ring-1 ring-brand-950/5 backdrop-blur dark:border-white/10 dark:bg-slate-900/95 dark:ring-white/5 sm:p-6">
+        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-brand-700 via-emerald-500 to-brand-400 dark:from-brand-400 dark:via-emerald-400" />
+        <div className="flex items-center justify-between gap-3 border-b border-border pb-4">
+          <div className="flex items-center gap-3">
+            <div className="grid h-10 w-10 place-items-center rounded-xl bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-200">
+              <BriefcaseBusiness className="h-5 w-5" />
             </div>
-            <h2 className="mt-5 text-2xl font-semibold leading-tight text-foreground">
-              Mobile App UI/UX Designer
-            </h2>
-            <p className="mt-2 flex items-center gap-2 text-base text-subtle">
-              <MapPin className="h-4 w-4" />
-              Dhaka, Bangladesh
-            </p>
-          </div>
-          <div className="rounded-2xl bg-muted/75 px-4 py-3 text-right">
-            <p className="text-sm text-subtle">Project budget</p>
-            <p className="mt-1 text-xl font-semibold text-foreground">৳30,000</p>
-          </div>
-        </div>
-
-        <div className="mt-8 grid gap-5 sm:grid-cols-[1fr_0.86fr]">
-          <div>
-            <p className="text-sm font-medium text-subtle">Skills</p>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {['Figma', 'Mobile UI', 'Prototype'].map((skill) => (
-                <span key={skill} className="rounded-full bg-brand-50 px-3 py-1.5 text-sm font-medium text-brand-800 dark:bg-brand-950/55 dark:text-brand-100">
-                  {skill}
-                </span>
-              ))}
-            </div>
-          </div>
-          <div className="rounded-2xl bg-muted/45 p-4">
-            <p className="text-sm text-subtle">Client</p>
-            <p className="mt-1 text-base font-semibold text-foreground">Orbit Labs</p>
-            <p className="mt-1 text-sm text-subtle">Dhaka</p>
-          </div>
-        </div>
-
-        <div className="mt-8 rounded-2xl bg-gradient-to-br from-brand-700 to-emerald-700 p-5 text-white shadow-xl shadow-brand-950/15 dark:from-brand-500 dark:to-emerald-500 dark:text-brand-950">
-          <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="text-sm font-medium opacity-80">Opportunity fit</p>
-              <p className="mt-1 text-lg font-semibold">JOB + CLIENT ↔ FREELANCER</p>
-            </div>
-            <div className="grid h-11 w-11 place-items-center rounded-full bg-white/18">
-              <Handshake className="h-5 w-5" />
+              <p className="text-sm font-semibold text-foreground">Opportunity workspace</p>
+              <p className="text-xs text-subtle">A clearer way to hire and be hired</p>
             </div>
           </div>
-          <div className="mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-white px-4 text-sm font-semibold text-brand-800 shadow-sm transition group-hover:translate-x-1 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0 dark:bg-brand-950 dark:text-brand-100">
-            View opportunity <ArrowRight className="h-4 w-4" />
-          </div>
-        </div>
-      </div>
-
-      <div className="relative mt-4 rounded-3xl bg-surface/95 p-4 shadow-2xl shadow-brand-950/12 ring-1 ring-border backdrop-blur transition duration-300 hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:translate-y-0 dark:bg-slate-800/95 sm:absolute sm:-bottom-5 sm:-left-8 sm:mt-0 sm:w-[280px]">
-        <div className="flex items-center gap-3">
-          <Avatar name="Nusrat Jahan" />
-          <div className="min-w-0">
-            <p className="text-base font-semibold text-foreground">Nusrat Jahan</p>
-            <p className="text-sm text-subtle">UI/UX Designer</p>
-          </div>
-          <span className="ml-auto rounded-full bg-emerald-50 px-2.5 py-1 text-sm font-medium text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-200">
-            Available
+          <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-200">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+            Open
           </span>
         </div>
-        <p className="mt-4 text-sm font-medium text-foreground">Chattogram</p>
-        <p className="mt-1 text-sm text-subtle">Figma • Product Design</p>
-      </div>
 
-      <div className="relative mt-4 rounded-3xl bg-surface/96 p-4 shadow-2xl shadow-brand-950/12 ring-1 ring-border backdrop-blur dark:bg-slate-800/96 sm:absolute sm:-right-6 sm:top-10 sm:mt-0 sm:w-[250px]">
-        <p className="text-sm font-semibold text-foreground">Hiring status</p>
-        <div className="mt-4 space-y-3">
-          {['Proposal submitted', 'Offer received', 'Contract ready'].map((item, index) => (
-            <div key={item} className="flex items-center gap-3">
-              <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-brand-50 text-xs font-semibold text-brand-700 dark:bg-brand-950/60 dark:text-brand-100">
-                {index + 1}
-              </span>
-              <span className="text-sm font-medium text-foreground">{item}</span>
+        <div className="pb-14 pt-6 sm:pb-16">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brand-700 dark:text-brand-300">Design & Creative</p>
+              <h2 className="mt-2 text-2xl font-semibold leading-tight tracking-[-0.02em] text-foreground">Mobile App UI/UX Designer</h2>
+              <p className="mt-2 flex items-center gap-1.5 text-sm text-subtle">
+                <MapPin className="h-4 w-4" /> Dhaka, Bangladesh
+              </p>
             </div>
-          ))}
+            <div className="rounded-xl border border-border bg-muted/55 px-3.5 py-3 sm:text-right">
+              <p className="text-xs font-medium text-subtle">Fixed project</p>
+              <p className="mt-1 text-lg font-semibold text-foreground">৳30,000</p>
+            </div>
+          </div>
+
+          <div className="mt-6 grid gap-3 sm:grid-cols-[1.15fr_0.85fr]">
+            <div className="rounded-2xl border border-border bg-muted/35 p-4">
+              <p className="text-xs font-medium text-subtle">Looking for</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {['Figma', 'Mobile UI', 'Prototype'].map((skill) => (
+                  <span key={skill} className="rounded-full bg-surface px-2.5 py-1 text-xs font-semibold text-foreground ring-1 ring-border dark:bg-slate-800">
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="rounded-2xl bg-brand-700 p-4 text-white dark:bg-brand-500 dark:text-brand-950">
+              <p className="text-xs font-medium opacity-80">Posted by</p>
+              <p className="mt-1 font-semibold">Orbit Labs</p>
+              <p className="mt-1 text-xs opacity-80">Verified client · Dhaka</p>
+            </div>
+          </div>
+
         </div>
       </div>
+
+      <div className="relative mt-4 rounded-2xl border border-border bg-surface/95 p-4 shadow-[0_20px_40px_-24px_rgba(15,23,42,0.38)] backdrop-blur dark:bg-slate-800/95 sm:absolute sm:-bottom-7 sm:-left-7 sm:mt-0 sm:w-[292px]">
+        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-subtle">Matched freelancer</p>
+        <div className="mt-3 flex items-center gap-3">
+          <Avatar name="Nusrat Jahan" />
+          <div className="min-w-0">
+            <p className="font-semibold text-foreground">Nusrat Jahan</p>
+            <p className="text-sm text-subtle">UI/UX Designer · Chattogram</p>
+          </div>
+        </div>
+        <div className="mt-3 flex items-center justify-between border-t border-border pt-3 text-xs">
+          <span className="font-medium text-subtle">Figma · Product Design</span>
+          <span className="font-semibold text-emerald-700 dark:text-emerald-300">Available</span>
+        </div>
+      </div>
+
     </div>
   );
 }
@@ -342,15 +326,14 @@ export default function Home() {
 
   return (
     <div className="bg-background text-foreground">
-      <section className="relative overflow-hidden border-b border-border bg-gradient-to-br from-brand-50 via-background to-background dark:from-brand-950/35 dark:via-background dark:to-background">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(16,185,129,0.13),transparent_34%),radial-gradient(circle_at_12%_20%,rgba(20,184,166,0.08),transparent_26%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(15,118,110,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(15,118,110,0.045)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:linear-gradient(to_bottom,black,transparent_76%)] dark:bg-[linear-gradient(rgba(45,212,191,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(45,212,191,0.045)_1px,transparent_1px)]" />
-        <div className="relative mx-auto grid max-w-7xl gap-8 px-4 py-14 sm:px-6 lg:min-h-[680px] lg:grid-cols-[0.46fr_0.54fr] lg:items-center lg:px-8 lg:py-16">
+      <section className="relative overflow-hidden border-b border-border bg-gradient-to-br from-brand-50/90 via-background to-background dark:from-brand-950/25 dark:via-background dark:to-background">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_28%,rgba(16,185,129,0.15),transparent_29%),radial-gradient(circle_at_5%_94%,rgba(20,184,166,0.09),transparent_28%)] dark:bg-[radial-gradient(circle_at_78%_28%,rgba(45,212,191,0.12),transparent_30%),radial-gradient(circle_at_5%_94%,rgba(16,185,129,0.08),transparent_28%)]" />
+        <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:min-h-[690px] lg:grid-cols-[0.45fr_0.55fr] lg:items-center lg:px-8 lg:py-20">
           <div className="flex flex-col justify-center">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-300">
               Bangladesh-first freelance marketplace
             </p>
-            <h1 className="mt-5 max-w-2xl text-4xl font-semibold tracking-[-0.03em] text-foreground sm:text-5xl lg:text-[4rem] lg:leading-[1.02]">
+            <h1 className="mt-5 max-w-2xl text-4xl font-semibold tracking-[-0.04em] text-foreground sm:text-5xl lg:text-[3.55rem] lg:leading-[1.06]">
               Where Bangladesh finds talent and opportunity.
             </h1>
             <p className="mt-5 max-w-xl text-base leading-7 text-subtle sm:text-lg">
@@ -364,8 +347,8 @@ export default function Home() {
                 Find Talent
               </ActionLink>
             </div>
-            <p className="mt-6 text-sm font-medium text-subtle">
-              Bangladesh-focused <span className="mx-2 text-border">•</span> Structured hiring <span className="mx-2 text-border">•</span> Built for freelancers & clients
+            <p className="mt-7 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm font-medium text-subtle">
+              <span>Bangladesh-focused</span><span className="text-brand-500">•</span><span>Structured hiring</span><span className="text-brand-500">•</span><span>Built for freelancers & clients</span>
             </p>
           </div>
           <HeroMarketplacePreview />
