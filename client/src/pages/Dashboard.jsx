@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useMyProfile } from '../services/profile.js';
+import { useSavedJobs } from '../services/jobs.js';
 import { CheckCircle2, Circle, ArrowRight, Briefcase, Search } from 'lucide-react';
 
 const cards = {
@@ -8,7 +9,7 @@ const cards = {
     ['Profile completion', '40%'],
     ['Active proposals', '0'],
     ['Active contracts', '0'],
-    ['Available balance', '$0.00'],
+    ['Saved jobs', '0'],
   ],
   client: [
     ['Company profile', '0%'],
@@ -31,11 +32,17 @@ export default function Dashboard() {
   const isClient = role === 'client';
   const hasMarketplaceProfile = isFreelancer || isClient;
   const { data: profile } = useMyProfile({ enabled: hasMarketplaceProfile });
+  const { data: savedJobs } = useSavedJobs({ limit: 20 }, { enabled: isFreelancer });
   const completeness = profile?.completeness ?? 0;
   const profileDone = completeness >= 80;
+  const savedJobsCount = savedJobs?.pagination?.total ?? savedJobs?.items?.length ?? 0;
 
   const metrics = cards[role].map(([label, value]) =>
-    (label === 'Profile completion' || label === 'Company profile') ? [label, `${completeness}%`] : [label, value]
+    (label === 'Profile completion' || label === 'Company profile')
+      ? [label, `${completeness}%`]
+      : label === 'Saved jobs'
+        ? [label, String(savedJobsCount)]
+        : [label, value]
   );
 
   return (

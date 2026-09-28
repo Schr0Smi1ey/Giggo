@@ -4,6 +4,24 @@
 
 :root {
   color-scheme: light;
+  --color-background: 248 250 252;
+  --color-foreground: 15 23 42;
+  --color-surface: 255 255 255;
+  --color-elevated: 255 255 255;
+  --color-muted: 241 245 249;
+  --color-border: 226 232 240;
+  --color-subtle: 100 116 139;
+}
+
+.dark {
+  color-scheme: dark;
+  --color-background: 8 14 13;
+  --color-foreground: 226 232 240;
+  --color-surface: 15 23 22;
+  --color-elevated: 20 31 29;
+  --color-muted: 26 39 36;
+  --color-border: 45 64 59;
+  --color-subtle: 148 163 184;
 }
 
 html,
@@ -12,11 +30,27 @@ body,
   height: 100%;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  @apply bg-slate-50 text-slate-800 antialiased;
+  @apply bg-background text-foreground antialiased;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
 }
 
 /* Accessible focus ring for keyboard users. */
 :focus-visible {
-  @apply outline-none ring-2 ring-brand-500 ring-offset-2;
+  @apply outline-none ring-2 ring-brand-500 ring-offset-2 ring-offset-background;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }

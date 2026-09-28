@@ -2,9 +2,8 @@ export const ROLES = { FREELANCER: 'freelancer', CLIENT: 'client', ADMIN: 'admin
 
 export const NAV_LINKS = [
   { to: '/find-talent', label: 'Find Talent' },
-  { to: '/find-jobs', label: 'Find Jobs' },
-  { to: '/services', label: 'Services' },
-  { to: '/how-it-works', label: 'How It Works' },
+  { to: '/find-jobs', label: 'Find Work' },
+  { to: '/how-it-works', label: 'How Giggo Works' },
 ];
 
 // Mirror of server/src/config/constants.js (keep in sync).
