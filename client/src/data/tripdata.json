@@ -1,0 +1,84 @@
+{
+  "pathPoints": [
+    {
+      "position": {
+        "x": 5965176.221537258,
+        "y": -817887.0224294297,
+        "z": -2095625.2121483828
+      },
+      "inControl": {
+        "x": 5928358.897993141,
+        "y": -828152.7322215426,
+        "z": -2126422.0548949703
+      },
+      "outControl": {
+        "x": 5327602.511370714,
+        "y": -3215039.7707709773,
+        "z": -3001710.803899435
+      },
+      "settings": {
+        "name": "Giggo",
+        "vehicle": "lightplane_red",
+        "sizeScale": 1,
+        "speed": 1,
+        "cameraFollow": true,
+        "showPointName": true,
+        "zoomLevel": 8598970,
+        "noMove": false
+      }
+    },
+    {
+      "position": {
+        "x": -2835772.570640144,
+        "y": 5462382.570771245,
+        "z": 1665430.2030799708
+      },
+      "inControl": {
+        "x": -6041674.8394592125,
+        "y": -88323.43952831067,
+        "z": 2032260.2665041192
+      },
+      "outControl": {
+        "x": -3840030.619129332,
+        "y": 3965960.607557456,
+        "z": 330020.2048826278
+      },
+      "settings": {
+        "name": "RoutePoint2",
+        "vehicle": "lightplane_red",
+        "sizeScale": 1,
+        "speed": 1,
+        "cameraFollow": true,
+        "showPointName": true,
+        "zoomLevel": 8598462
+      }
+    },
+    {
+      "position": {
+        "x": -5848546.716107708,
+        "y": 973116.6811298789,
+        "z": -2340799.791512059
+      },
+      "inControl": {
+        "x": -4844288.667618521,
+        "y": 2469538.6443436677,
+        "z": -1005389.7933147161
+      },
+      "outControl": {
+        "x": -6852804.764596896,
+        "y": -523305.2820839102,
+        "z": -3676209.7897094022
+      },
+      "settings": {
+        "name": "RoutePoint3",
+        "vehicle": "lightplane_red",
+        "sizeScale": 1,
+        "speed": 1,
+        "cameraFollow": true,
+        "showPointName": true,
+        "zoomLevel": 8598118
+      }
+    }
+  ],
+  "version": "1.0"
+}
