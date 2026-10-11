@@ -1,0 +1,33 @@
+import { Router } from 'express';
+import authRoutes from './auth.routes.js';
+import profileRoutes from './profile.routes.js';
+import verificationRoutes from './verification.routes.js';
+import aiRoutes from './ai.routes.js';
+import jobRoutes from './job.routes.js';
+import proposalRoutes from './proposal.routes.js';
+import offerRoutes from './offer.routes.js';
+import conversationRoutes from './conversation.routes.js';
+import notificationRoutes from './notification.routes.js';
+import contractRoutes from './contract.routes.js';
+import projectRoutes from './project.routes.js';
+import paymentRoutes from './payment.routes.js';
+import virtualCardRoutes from './virtualCard.routes.js';
+
+const router = Router();
+
+router.get('/health', (_req, res) => res.json({ success: true, message: 'ok', data: { status: 'healthy' } }));
+router.use('/auth', authRoutes);
+router.use('/profiles', profileRoutes);
+router.use('/verification', verificationRoutes);
+router.use('/ai', aiRoutes);
+router.use('/jobs', jobRoutes);
+router.use('/proposals', proposalRoutes);
+router.use('/offers', offerRoutes);
+router.use('/conversations', conversationRoutes);
+router.use('/notifications', notificationRoutes);
+router.use('/contracts', contractRoutes);
+router.use('/projects', projectRoutes);
+router.use('/', paymentRoutes);
+router.use('/', virtualCardRoutes);
+
+export default router;
