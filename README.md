@@ -5,8 +5,8 @@ Applications Development. This repository contains both halves of the app.
 
 | Folder | What it is | Stack |
 | --- | --- | --- |
-| [`frontend/`](frontend) | Web client | React, Vite, Tailwind CSS, TanStack Query |
-| [`backend/`](backend) | REST API and real-time server | Node.js, Express, MongoDB, Socket.IO |
+| [`client/`](client) | Web client (frontend) | React, Vite, Tailwind CSS, TanStack Query |
+| [`server/`](server) | REST API and real-time server (backend) | Node.js, Express, MongoDB, Socket.IO |
 
 Each folder is an independent npm project with its own `package.json`,
 `.env.example`, and README. Run the commands below from inside the folder.
@@ -16,26 +16,26 @@ Each folder is an independent npm project with its own `package.json`,
 Use the Node version in each folder's `.nvmrc`.
 
 ```bash
-# Backend (API)
-cd backend
+# Server (API)
+cd server
 cp .env.example .env     # then fill in the placeholder values
 npm install
 npm run dev
 
-# Frontend (web client), in a second terminal
-cd frontend
+# Client (web app), in a second terminal
+cd client
 cp .env.example .env.local
 npm install
 npm run dev
 ```
 
-See [`backend/README.md`](backend/README.md) and
-[`frontend/README.md`](frontend/README.md) for details, and
-[`frontend/CONTRIBUTING.md`](frontend/CONTRIBUTING.md) for the contribution workflow.
+See [`server/README.md`](server/README.md) and
+[`client/README.md`](client/README.md) for details, and
+[`client/CONTRIBUTING.md`](client/CONTRIBUTING.md) for the contribution workflow.
 
 ## Repository layout
 
-- `frontend/`, `backend/`: the two applications.
+- `client/`, `server/`: the two applications.
 - `.github/`: shared CI workflows, issue and PR templates, and CODEOWNERS.
   Each CI workflow only runs when files in its own folder change.
 
