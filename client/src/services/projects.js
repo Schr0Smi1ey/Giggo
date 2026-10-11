@@ -28,4 +28,30 @@ export function useUpdateProjectProgress() {
   });
 }
 
+function useProjectAction(mutationFn) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn,
+    onSuccess: (project) => {
+      const projectId = project?._id || project?.id;
+      queryClient.invalidateQueries({ queryKey: KEYS.all });
+      queryClient.invalidateQueries({ queryKey: ['contracts'] });
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+      if (projectId) queryClient.setQueryData(KEYS.detail(projectId), project);
+    },
+  });
+}
+
+export function useStartMilestone() {
+  return useProjectAction(({ projectId, milestoneId }) => projectsApi.startMilestone(projectId, milestoneId));
+}
+
+export function useSubmitMilestoneWork() {
+  return useProjectAction(({ projectId, milestoneId, description, links }) => projectsApi.submitWork(projectId, milestoneId, { description, links }));
+}
+
+export function useReviewMilestoneSubmission() {
+  return useProjectAction(({ projectId, milestoneId, submissionId, decision, feedback }) => projectsApi.reviewSubmission(projectId, milestoneId, submissionId, { decision, feedback }));
+}
+
 export { KEYS as projectKeys };

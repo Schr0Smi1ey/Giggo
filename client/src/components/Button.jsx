@@ -2,16 +2,18 @@ import clsx from 'clsx';
 import { Loader2 } from 'lucide-react';
 
 const variants = {
-  primary: 'bg-brand-600 text-white hover:bg-brand-700 disabled:bg-brand-300',
-  secondary: 'bg-white text-brand-700 border border-brand-200 hover:bg-brand-50',
-  ghost: 'bg-transparent text-slate-600 hover:bg-slate-100',
-  danger: 'bg-red-600 text-white hover:bg-red-700 disabled:bg-red-300',
+  primary: 'bg-brand-700 text-white shadow-sm hover:bg-brand-800 dark:bg-brand-500 dark:text-brand-950 dark:hover:bg-brand-400',
+  secondary: 'border border-border bg-surface text-foreground shadow-sm hover:bg-muted',
+  outline: 'border border-brand-300 bg-transparent text-brand-700 hover:bg-brand-50 dark:border-brand-700 dark:text-brand-200 dark:hover:bg-brand-950/45',
+  ghost: 'bg-transparent text-subtle hover:bg-muted hover:text-foreground',
+  danger: 'bg-red-600 text-white shadow-sm hover:bg-red-700 dark:bg-red-500 dark:text-red-950 dark:hover:bg-red-400',
 };
 
 const sizes = {
-  sm: 'px-3 py-1.5 text-sm',
-  md: 'px-4 py-2 text-sm',
-  lg: 'px-6 py-3 text-base',
+  sm: 'h-9 px-3 text-sm',
+  md: 'h-10 px-4 text-sm',
+  lg: 'h-12 px-5 text-base',
+  icon: 'h-10 w-10 p-0',
 };
 
 export function Button({
@@ -27,8 +29,9 @@ export function Button({
     <button
       className={clsx(
         'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors',
-        'focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed',
-        variants[variant],
+        'focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+        'disabled:cursor-not-allowed disabled:opacity-55',
+        variants[variant] || variants.primary,
         sizes[size],
         className
       )}
