@@ -6,34 +6,49 @@ import {
   ExternalLink,
   FileCheck2,
   History,
+  Loader2,
+  ReceiptText,
   RotateCcw,
   Send,
+  ShieldCheck,
   X,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { Link } from 'react-router-dom';
 import { apiErrorMessage } from '../api/client.js';
 import {
   useReviewMilestoneSubmission,
   useStartMilestone,
   useSubmitMilestoneWork,
 } from '../services/projects.js';
+import { useReleaseMilestone, pendingPayment, usePaymentSync } from '../services/payments.js';
 import { timeAgo } from '../utils/format.js';
+import { paymentStatusLabel } from '../utils/payments.js';
 import { Button } from './Button.jsx';
+import { FundMilestoneDialog } from './FundMilestoneDialog.jsx';
+import { PaymentFlowAnimation } from './PaymentFlowAnimation.jsx';
+import { money } from './VirtualCard.jsx';
 import { Textarea } from './Textarea.jsx';
 
 const STATUS_LABELS = {
-  pending: 'Pending',
+  pending: 'Funding required',
+  funding_pending: 'Funding in progress',
+  funded: 'Funded — ready to start',
   in_progress: 'In progress',
   submitted: 'Awaiting review',
   revision_requested: 'Revision requested',
   approved: 'Approved',
+  paid: 'Paid',
 };
 const STATUS_STYLES = {
   pending: 'bg-slate-100 text-slate-600',
+  funding_pending: 'bg-sky-50 text-sky-700',
+  funded: 'bg-teal-50 text-teal-700',
   in_progress: 'bg-blue-50 text-blue-700',
   submitted: 'bg-violet-50 text-violet-700',
   revision_requested: 'bg-amber-50 text-amber-700',
   approved: 'bg-emerald-50 text-emerald-700',
+  paid: 'bg-emerald-100 text-emerald-800',
 };
 const SUBMISSION_STYLES = {
   submitted: 'bg-violet-50 text-violet-700',
@@ -61,7 +76,7 @@ function validLinks(items) {
 }
 
 function MilestoneIcon({ status }) {
-  if (status === 'approved') return <CheckCircle2 className="h-5 w-5 text-emerald-600" aria-hidden="true" />;
+  if (status === 'approved' || status === 'paid') return <CheckCircle2 className="h-5 w-5 text-emerald-600" aria-hidden="true" />;
   if (status === 'in_progress' || status === 'submitted') return <Clock3 className="h-5 w-5 text-blue-600" aria-hidden="true" />;
   if (status === 'revision_requested') return <RotateCcw className="h-5 w-5 text-amber-600" aria-hidden="true" />;
   return <Circle className="h-5 w-5 text-slate-300" aria-hidden="true" />;
@@ -209,12 +224,35 @@ function SubmissionHistory({ submissions }) {
   );
 }
 
-export function MilestoneWorkspace({ projectId, milestones = [], contractStatus, currency = 'USD', isClient, isFreelancer }) {
+const SUMMARY = [['total', 'Total contract'], ['funded', 'Funded'], ['escrow', 'In escrow'], ['released', 'Released'], ['remaining', 'Remaining']];
+
+function FinancialSummary({ summary }) {
+  return (
+    <dl className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-5" aria-label="Payment summary">
+      {SUMMARY.map(([key, title]) => (
+        <div key={key} className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+          <dt className="text-xs text-slate-500">{title}</dt>
+          <dd className="mt-1 break-words font-semibold text-slate-900">{money(summary[key], summary.currency)}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+export function MilestoneWorkspace({ projectId, projectTitle = 'Project', freelancerName = 'Freelancer', milestones = [], payments = [], financialSummary, contractStatus, currency = 'USD', isClient, isFreelancer }) {
+  usePaymentSync();
+  const release = useReleaseMilestone();
+  const [funding, setFunding] = useState(null);
   const start = useStartMilestone();
   const submitWork = useSubmitMilestoneWork();
   const review = useReviewMilestoneSubmission();
   const [dialog, setDialog] = useState(null);
-  const pending = start.isPending || submitWork.isPending || review.isPending;
+  const pending = start.isPending || submitWork.isPending || review.isPending || release.isPending;
+  const paymentFor = (milestone) => payments.find((payment) => idOf(payment.milestone) === idOf(milestone));
+  const releaseMilestone = (milestone) => release.mutate(idOf(milestone), {
+    onSuccess: () => toast.success('Payment released to the freelancer'),
+    onError: (error) => toast.error(apiErrorMessage(error, 'Could not release the payment')),
+  });
   const active = contractStatus === 'active';
 
   const closeDialog = useCallback(() => { if (!pending) setDialog(null); }, [pending]);
@@ -254,13 +292,15 @@ export function MilestoneWorkspace({ projectId, milestones = [], contractStatus,
   return (
     <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm" aria-labelledby="milestones-heading">
       <ActionDialog dialog={dialog} pending={pending} onClose={closeDialog} onSubmit={submitDialog} />
+      {funding && <FundMilestoneDialog milestone={funding} projectTitle={projectTitle} freelancerName={freelancerName} currency={financialSummary?.currency || currency} onClose={() => setFunding(null)} />}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-2"><FileCheck2 className="h-5 w-5 text-brand-600" /><h2 id="milestones-heading" className="text-lg font-semibold text-slate-900">Milestones and submissions</h2></div>
           <p className="mt-1 text-sm text-slate-500">Deliver, review, and revise accepted fixed-price work without losing earlier versions.</p>
         </div>
-        {milestones.length > 0 && <span className="text-sm text-slate-500">{milestones.filter((item) => item.status === 'approved').length} of {milestones.length} approved</span>}
+        {milestones.length > 0 && <span className="text-sm text-slate-500">{milestones.filter((item) => ['approved', 'paid'].includes(item.status)).length} of {milestones.length} approved</span>}
       </div>
+      {financialSummary && milestones.length > 0 && <FinancialSummary summary={financialSummary} />}
 
       {!active && milestones.length > 0 && <p className="mt-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-800">Milestone actions are paused while the contract is {contractStatus}.</p>}
       {milestones.length === 0 ? (
@@ -273,6 +313,9 @@ export function MilestoneWorkspace({ projectId, milestones = [], contractStatus,
           {milestones.map((milestone, index) => {
             const latest = milestone.submissions?.[0];
             const awaiting = milestone.submissions?.find((submission) => submission.status === 'submitted');
+            const payment = paymentFor(milestone);
+            const paymentPending = pendingPayment(payment);
+            const flowCurrency = financialSummary?.currency || currency;
             return (
               <li key={idOf(milestone)} className="rounded-xl border border-slate-200 p-4">
                 <div className="flex flex-wrap items-start gap-3">
@@ -285,7 +328,7 @@ export function MilestoneWorkspace({ projectId, milestones = [], contractStatus,
                     <h3 className="mt-1 font-semibold text-slate-900">{milestone.title}</h3>
                     {milestone.description && <p className="mt-1 text-sm leading-6 text-slate-600">{milestone.description}</p>}
                     <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500">
-                      <span>{currency} {Number(milestone.amount || 0).toLocaleString()}</span>
+                      <span>{money(milestone.amount, flowCurrency)}</span>
                       {milestone.dueDate && <span>Due {dateLabel(milestone.dueDate)}</span>}
                       {milestone.startedAt && <span>Started {timeAgo(milestone.startedAt)}</span>}
                     </div>
@@ -294,11 +337,26 @@ export function MilestoneWorkspace({ projectId, milestones = [], contractStatus,
 
                 {milestone.status === 'revision_requested' && latest?.feedback && <p className="mt-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-800"><strong>Revision requested:</strong> {latest.feedback}</p>}
                 {milestone.status === 'submitted' && <p className="mt-4 rounded-lg bg-violet-50 p-3 text-sm text-violet-800">Version {awaiting?.version || latest?.version} is awaiting client review.</p>}
-                {milestone.status === 'approved' && <p className="mt-4 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-800">This milestone has been approved.</p>}
+                {milestone.status === 'approved' && <p className="mt-4 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-800">{isClient ? 'Approved. Release the escrowed payment to pay the freelancer.' : 'Approved. Waiting for the client to release the escrowed payment.'}</p>}
+                {milestone.status === 'paid' && <p className="mt-4 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-800">Payment has been released from escrow.</p>}
+                {isFreelancer && milestone.status === 'pending' && !paymentPending && <p className="mt-4 rounded-lg bg-slate-50 p-3 text-sm text-slate-600">Waiting for the client to fund escrow before work can start.</p>}
+                {payment && (
+                  <div className="mt-4 space-y-3">
+                    <PaymentFlowAnimation payment={payment} milestone={milestone} />
+                    <p className="flex flex-wrap items-center gap-x-3 gap-y-1 break-all text-xs text-slate-500">
+                      {paymentPending && <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />}
+                      <span>{payment.transactionReference}</span>
+                      <span className={payment.status === 'failed' ? 'text-red-700' : 'text-emerald-700'}>{paymentStatusLabel(payment.status)} · Escrow: {paymentStatusLabel(payment.escrowStatus)}</span>
+                      <Link className="inline-flex items-center gap-1 font-medium text-brand-700 hover:underline" to={`/dashboard/payments/${idOf(payment)}`}><ReceiptText className="h-3.5 w-3.5" />{paymentPending ? 'Track payment' : 'View payment'}</Link>
+                    </p>
+                  </div>
+                )}
 
                 {active && (
                   <div className="mt-4 flex flex-wrap gap-2">
-                    {isFreelancer && milestone.status === 'pending' && <Button size="sm" loading={start.isPending} disabled={pending} onClick={() => startMilestone(milestone)}><Clock3 className="h-4 w-4" /> Start milestone</Button>}
+                    {isClient && ['pending', 'funding_pending'].includes(milestone.status) && !paymentPending && <Button size="sm" disabled={pending} onClick={() => setFunding(milestone)}><ShieldCheck className="h-4 w-4" /> Fund milestone</Button>}
+                    {isClient && milestone.status === 'approved' && <Button size="sm" loading={release.isPending} disabled={pending} onClick={() => releaseMilestone(milestone)}><CheckCircle2 className="h-4 w-4" /> Release payment</Button>}
+                    {isFreelancer && milestone.status === 'funded' && <Button size="sm" loading={start.isPending} disabled={pending} onClick={() => startMilestone(milestone)}><Clock3 className="h-4 w-4" /> Start milestone</Button>}
                     {isFreelancer && ['in_progress', 'revision_requested'].includes(milestone.status) && <Button size="sm" disabled={pending} onClick={() => setDialog({ kind: 'submit', milestone })}><Send className="h-4 w-4" /> {milestone.status === 'revision_requested' ? 'Submit revision' : 'Submit work'}</Button>}
                     {isClient && milestone.status === 'submitted' && awaiting && <><Button size="sm" disabled={pending} onClick={() => setDialog({ kind: 'approve', milestone, submission: awaiting })}><CheckCircle2 className="h-4 w-4" /> Approve</Button><Button size="sm" variant="secondary" disabled={pending} onClick={() => setDialog({ kind: 'revision', milestone, submission: awaiting })}><RotateCcw className="h-4 w-4" /> Request revision</Button></>}
                   </div>

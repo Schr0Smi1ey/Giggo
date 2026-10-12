@@ -1,7 +1,7 @@
 import { Outlet, NavLink, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Bell, Briefcase, Bookmark, FileSignature, FileText, FolderKanban, Handshake, Inbox, LayoutDashboard, Menu, MessageCircle, Settings, ShieldCheck, Sparkles, User, X } from 'lucide-react';
+import { Bell, Briefcase, Bookmark, CreditCard, FileSignature, FileText, FolderKanban, Handshake, Inbox, LayoutDashboard, Menu, MessageCircle, ReceiptText, Settings, ShieldCheck, Sparkles, User, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { notificationsApi } from '../api/notifications.js';
 import { ThemeToggle } from '../components/ThemeToggle.jsx';
@@ -41,6 +41,8 @@ export function DashboardLayout() {
     ...items,
     ...((hasRole('client') || hasRole('freelancer')) ? [{ to: '/dashboard/contracts', label: 'Contracts', icon: FileSignature }] : []),
     ...((hasRole('client') || hasRole('freelancer')) ? [{ to: '/dashboard/projects', label: 'Projects', icon: FolderKanban }] : []),
+    ...((hasRole('client') || hasRole('freelancer')) ? [{ to: '/dashboard/card', label: 'Virtual card', icon: CreditCard }] : []),
+    ...((hasRole('client') || hasRole('freelancer')) ? [{ to: '/dashboard/payments', label: 'Payments', icon: ReceiptText }] : []),
     ...(hasRole('client') ? clientItems : []),
     ...(hasRole('freelancer') ? freelancerItems : []),
     ...(hasRole('admin') ? adminItems : []),

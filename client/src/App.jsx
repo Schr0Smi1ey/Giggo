@@ -45,7 +45,10 @@ const ForgotPassword = lazy(() => import('./pages/ForgotPassword.jsx'));
 const ResetPassword = lazy(() => import('./pages/ResetPassword.jsx'));
 const AuthCallback = lazy(() => import('./pages/AuthCallback.jsx'));
 const Placeholder = lazy(() => import('./pages/Placeholder.jsx'));
+const HowItWorks = lazy(() => import('./pages/HowItWorks.jsx'));
 const ClientProfile = lazy(() => import('./pages/ClientProfile.jsx'));
+const VirtualCardPage = lazy(() => import('./pages/VirtualCardPage.jsx'));
+const Payments = lazy(() => import('./pages/Payments.jsx'));
 
 function ProfileDestination() {
   const { hasRole } = useAuth();
@@ -67,7 +70,7 @@ export default function App() {
             <Route path="/jobs/:id" element={<JobDetail />} />
             <Route path="/jobs/:id/propose" element={<ProtectedRoute roles={['freelancer']}><SubmitProposal /></ProtectedRoute>} />
             <Route path="/services" element={<Placeholder title="Services" phase="Phase 10" />} />
-            <Route path="/how-it-works" element={<Placeholder title="How It Works" />} />
+            <Route path="/how-it-works" element={<HowItWorks />} />
             <Route path="/about" element={<Placeholder title="About" />} />
             <Route path="/pricing" element={<Placeholder title="Pricing" />} />
             <Route path="/contact" element={<Placeholder title="Contact" />} />
@@ -117,6 +120,12 @@ export default function App() {
             <Route path="contracts/:id" element={<ProtectedRoute roles={['client', 'freelancer']}><ContractDetail /></ProtectedRoute>} />
             <Route path="projects" element={<ProtectedRoute roles={['client', 'freelancer']}><MyProjects /></ProtectedRoute>} />
             <Route path="projects/:id" element={<ProtectedRoute roles={['client', 'freelancer']}><ProjectDetail /></ProtectedRoute>} />
+            <Route path="payments" element={<ProtectedRoute roles={['client', 'freelancer']}><Payments /></ProtectedRoute>} />
+            <Route path="payments/:paymentId" element={<ProtectedRoute roles={['client', 'freelancer']}><Payments /></ProtectedRoute>} />
+            <Route path="card" element={<ProtectedRoute roles={['client', 'freelancer']}><VirtualCardPage /></ProtectedRoute>} />
+            <Route path="card/transactions" element={<ProtectedRoute roles={['client', 'freelancer']}><VirtualCardPage /></ProtectedRoute>} />
+            <Route path="developer/card" element={<ProtectedRoute roles={['client', 'freelancer']}><VirtualCardPage /></ProtectedRoute>} />
+            <Route path="developer/wallet" element={<ProtectedRoute roles={['client', 'freelancer']}><VirtualCardPage /></ProtectedRoute>} />
             <Route path="saved-jobs" element={<ProtectedRoute roles={['freelancer']}><SavedJobs /></ProtectedRoute>} />
             <Route path="cv-analysis" element={<ProtectedRoute roles={['freelancer']}><CvAnalysis /></ProtectedRoute>} />
             <Route path="verification" element={<ProtectedRoute roles={['freelancer']}><Verification /></ProtectedRoute>} />

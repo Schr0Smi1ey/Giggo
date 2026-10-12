@@ -64,7 +64,11 @@ export default function ProjectDetail() {
       <div className="mt-6">
         <MilestoneWorkspace
           projectId={id}
+          projectTitle={contract.title}
+          freelancerName={contract.freelancer?.name || 'Freelancer'}
           milestones={project.milestones || []}
+          payments={project.payments || []}
+          financialSummary={project.financialSummary}
           contractStatus={project.status}
           currency={contract.budget?.currency || 'USD'}
           isClient={isClient}

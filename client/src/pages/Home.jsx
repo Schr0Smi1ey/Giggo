@@ -327,6 +327,16 @@ export default function Home() {
   return (
     <div className="bg-background text-foreground">
       <section className="relative overflow-hidden border-b border-border bg-gradient-to-br from-brand-50/90 via-background to-background dark:from-brand-950/25 dark:via-background dark:to-background">
+        <video
+          className="absolute inset-0 h-full w-full object-cover opacity-40 dark:opacity-25"
+          src="/hero-bg.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          aria-hidden="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/25 via-brand-100/50 to-teal-400/20 mix-blend-multiply dark:from-emerald-500/20 dark:via-transparent dark:to-teal-400/10 dark:mix-blend-normal" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_28%,rgba(16,185,129,0.15),transparent_29%),radial-gradient(circle_at_5%_94%,rgba(20,184,166,0.09),transparent_28%)] dark:bg-[radial-gradient(circle_at_78%_28%,rgba(45,212,191,0.12),transparent_30%),radial-gradient(circle_at_5%_94%,rgba(16,185,129,0.08),transparent_28%)]" />
         <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:min-h-[690px] lg:grid-cols-[0.45fr_0.55fr] lg:items-center lg:px-8 lg:py-20">
           <div className="flex flex-col justify-center">
